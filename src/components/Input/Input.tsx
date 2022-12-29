@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { useCursor } from '@react-three/drei';
-import { Color } from '@react-three/fiber';
-import { useState, Ref, ChangeEvent, forwardRef } from 'react';
-import Label, { LabelProps } from './Label';
-import Text from './Text';
+import * as React from "react";
+import { useCursor } from "@react-three/drei";
+import { Color } from "@react-three/fiber";
+import { useState, Ref, ChangeEvent, forwardRef } from "react";
+import Label, { LabelProps } from "./Label";
+import Text from "./Text";
 
 export type TroikaTextProps = {
   color?: Color;
@@ -22,7 +22,7 @@ export type TroikaTextProps = {
   strokeOpacity?: number;
   fillOpacity?: number;
   onSync?: (troika: any) => void;
-};
+} & Omit<JSX.IntrinsicElements["mesh"], "ref" | "type">;
 
 type Props = {
   /**
@@ -36,7 +36,7 @@ type Props = {
   onChange?: (e: ChangeEvent) => void;
 
   /** setting this to password will mask the characters with dots */
-  type?: 'text' | 'password';
+  type?: "text" | "password";
 
   /**
    * Props to pass to the underlying troika-three-text instance
@@ -62,7 +62,7 @@ type Props = {
    * `textProps.fontSize` value
    */
   padding?: [number, number];
-} & Omit<JSX.IntrinsicElements['group'], 'ref'>;
+} & Omit<JSX.IntrinsicElements["group"], "ref" | "type">;
 
 /**
  * An Input field that is rendered in the canvas and bound
@@ -71,29 +71,29 @@ type Props = {
 const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
   const {
     onChange,
-    type = 'text',
+    type = "text",
     textProps,
     labelProps,
     width = 1.5,
-    backgroundColor = 'black',
+    backgroundColor = "black",
     backgroundOpacity = 0.1,
     padding = [0.025, 0.1],
     ...restProps
   } = props;
 
   const [hovered, setHovered] = useState(false);
-  useCursor(hovered, 'text');
+  useCursor(hovered, "text");
 
   // handle text defaults
   const fontSize = textProps?.fontSize || 0.0825;
-  const fontColor = textProps?.color || 'black';
+  const fontColor = textProps?.color || "black";
 
   const paddingY = padding[1] * fontSize;
   const height = fontSize + paddingY * 2;
 
   // handle label defaults
   const labelSize = labelProps?.fontSize || 0.07;
-  const labelColor = labelProps?.color || 'black';
+  const labelColor = labelProps?.color || "black";
 
   return (
     <group {...restProps}>
@@ -131,6 +131,6 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
   );
 });
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export { Input };

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom","es2019"],
+    "lib": ["dom", "es2019"],
     "module": "CommonJS",
     "moduleResolution": "node",
     "esModuleInterop": false,
@@ -17,12 +17,8 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
-    "baseUrl": "./src",
+    "baseUrl": "./src"
   },
-  "include": [
-    "./src", "typings.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./src", "typings.d.ts"],
+  "exclude": ["node_modules"]
 }

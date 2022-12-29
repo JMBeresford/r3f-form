@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Html, Mask, Text as TextImpl, useMask } from '@react-three/drei';
-import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
+import * as React from "react";
+import { Html, Mask, Text as TextImpl, useMask } from "@react-three/drei";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import {
   Suspense,
   useMemo,
@@ -12,18 +12,18 @@ import {
   useEffect,
   forwardRef,
   RefObject,
-} from 'react';
-import { BufferGeometry, Group, Material, Mesh } from 'three';
-import { damp } from 'three/src/math/MathUtils';
-import { TroikaTextProps } from './Input';
-import { getCaretAtPoint } from 'troika-three-text';
+} from "react";
+import { BufferGeometry, Group, Material, Mesh } from "three";
+import { damp } from "three/src/math/MathUtils";
+import { TroikaTextProps } from "./Input";
+import { getCaretAtPoint } from "troika-three-text";
 
 export type TextProps = {
   onChange?: (e: ChangeEvent) => void;
   width: number;
   height: number;
   padding: [number, number];
-  type: 'text' | 'password';
+  type: "text" | "password";
 } & TroikaTextProps;
 
 const Text = forwardRef(
@@ -50,7 +50,7 @@ const Text = forwardRef(
     const clock = useThree((s) => s.clock);
     const time = useRef<number>(0);
     const [active, setActive] = useState<boolean>(false);
-    const [content, setContent] = useState<string>('');
+    const [content, setContent] = useState<string>("");
     const [caret, setCaret] = useState<number>(0);
     const [selection, setSelection] = useState<[number, number]>([0, 0]);
     const [renderInfo, setRenderInfo] = useState(null);
@@ -126,13 +126,13 @@ const Text = forwardRef(
     const handleDoubleClick = useCallback(
       (e: ThreeEvent<MouseEvent>) => {
         function isWhitespace(str: string): boolean {
-          return str && str.trim() === '';
+          return str && str.trim() === "";
         }
 
         let start: number = 0,
           end: number = content.length;
 
-        if (type === 'password') {
+        if (type === "password") {
           domRef.current.select();
           return;
         }
@@ -151,7 +151,7 @@ const Text = forwardRef(
           }
         }
 
-        domRef.current.setSelectionRange(start, end, 'none');
+        domRef.current.setSelectionRange(start, end, "none");
       },
       [caret, content, type, domRef]
     );
@@ -168,7 +168,7 @@ const Text = forwardRef(
         let idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
         setSelection([idx, idx]);
         setCaret(idx);
-        domRef.current.setSelectionRange(idx, idx, 'none');
+        domRef.current.setSelectionRange(idx, idx, "none");
       },
       [domRef, renderInfo, clock, content]
     );
@@ -183,19 +183,19 @@ const Text = forwardRef(
 
         let point = textRef.current.worldToLocal(e.point);
         let idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
-        let start: number, end: number, dir: 'forward' | 'backward' | 'none';
+        let start: number, end: number, dir: "forward" | "backward" | "none";
 
         if (idx < caret) {
           start = idx;
           end = caret;
-          dir = 'backward';
+          dir = "backward";
         } else if (idx > caret) {
           start = caret;
           end = idx;
-          dir = 'forward';
+          dir = "forward";
         } else {
           start = end = idx;
-          dir = 'none';
+          dir = "none";
         }
 
         setSelection([start, end]);
@@ -225,9 +225,9 @@ const Text = forwardRef(
         if (pos === undefined || Number.isNaN(pos)) return;
       } else {
         let dir = domRef.current.selectionDirection;
-        if (selectionStart < left && dir === 'backward') {
+        if (selectionStart < left && dir === "backward") {
           pos = selectionStart;
-        } else if (selectionEnd > right && dir === 'forward') {
+        } else if (selectionEnd > right && dir === "forward") {
           pos = selectionEnd;
         }
       }
@@ -276,12 +276,12 @@ const Text = forwardRef(
             onChange={handleChange}
             onSelect={handleSelect}
             style={{
-              position: 'absolute',
-              left: '-1000vw',
-              transform: 'translateX(-50%)',
+              position: "absolute",
+              left: "-1000vw",
+              transform: "translateX(-50%)",
               width: `${10 * width}em`,
-              touchAction: 'none',
-              pointerEvents: 'none',
+              touchAction: "none",
+              pointerEvents: "none",
               opacity: 0,
             }}
           />
@@ -295,16 +295,16 @@ const Text = forwardRef(
                 onSync={handleSync}
                 fontSize={fontSize}
                 font={font}
-                anchorX='left'
-                anchorY='top-baseline'
+                anchorX="left"
+                anchorY="top-baseline"
                 // @ts-ignore
-                whiteSpace='nowrap'
-                letterSpacing={type === 'password' ? 0.1 : 0}
+                whiteSpace="nowrap"
+                letterSpacing={type === "password" ? 0.1 : 0}
                 depthOffset={0.2}
                 position-y={-renderInfo?.capHeight / 2}
                 {...restProps}
               >
-                {type === 'password' ? '•'.repeat(content.length) : content}
+                {type === "password" ? "•".repeat(content.length) : content}
                 <meshBasicMaterial
                   color={color}
                   {...stencil}
@@ -337,7 +337,7 @@ const Text = forwardRef(
               >
                 <planeGeometry args={[1, fontSize]} />
                 <meshBasicMaterial
-                  color='blue'
+                  color="blue"
                   transparent
                   opacity={0.25}
                   depthWrite={false}
@@ -352,6 +352,6 @@ const Text = forwardRef(
   }
 );
 
-Text.displayName = 'Text';
+Text.displayName = "Text";
 
 export default Text;

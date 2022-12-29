@@ -1,15 +1,17 @@
 {
   "name": "@jberesford/r3f-input",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "A webGL input field component for use with React Three Fiber",
-  "main": "index.cjs.js",
-  "module": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "rollup -c",
+    "typegen": "tsc --emitDeclarationOnly",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
