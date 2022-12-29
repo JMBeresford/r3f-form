@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom","es2019"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": false,
+    "jsx": "react",
+    "pretty": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "baseUrl": "./src",
+  },
+  "include": [
+    "./src", "typings.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
