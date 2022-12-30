@@ -259,7 +259,6 @@ const Text = forwardRef(
       <group>
         <Mask
           id={1}
-          position-z={0.01}
           onClick={handleClick}
           onDoubleClick={handleDoubleClick}
           onPointerDown={handlePointerDown}
