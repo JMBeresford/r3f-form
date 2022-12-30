@@ -1,5 +1,7 @@
 # r3f-input
 
+### [View examples](https://jmberesford.github.io/r3f-input/?path=/story/input--text-input)
+
 > ## WARNING: UNDER HEAVY DEVELOPMENT
 > Each release will aim to be a fully functional and usable release,
 > but breaking API changes WILL be likely for the forseeable future.
