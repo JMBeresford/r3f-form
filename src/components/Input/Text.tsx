@@ -292,6 +292,7 @@ const Text = forwardRef(
             <Suspense fallback={null}>
               <TextImpl
                 ref={textRef}
+                renderOrder={3}
                 onSync={handleSync}
                 fontSize={fontSize}
                 font={font}
@@ -300,13 +301,15 @@ const Text = forwardRef(
                 // @ts-ignore
                 whiteSpace="nowrap"
                 letterSpacing={type === "password" ? 0.1 : 0}
-                depthOffset={0.2}
-                position-y={-renderInfo?.capHeight / 2}
+                depthOffset={0.5}
+                position={[0, -renderInfo?.capHeight / 2, 0]}
                 {...restProps}
               >
                 {type === "password" ? "•".repeat(content.length) : content}
                 <meshBasicMaterial
                   color={color}
+                  transparent
+                  toneMapped={false}
                   {...stencil}
                   depthWrite={false}
                 />
@@ -317,9 +320,10 @@ const Text = forwardRef(
               ref={caretRef}
               position={[content ? caretPositions[caret || 0] : 0, 0, 0]}
               visible={active && caret !== null}
+              renderOrder={3}
             >
               <planeGeometry args={[0.005, fontSize]} />
-              <meshBasicMaterial color={color} transparent depthWrite={false} />
+              <meshBasicMaterial color={color} transparent toneMapped={false} />
             </mesh>
 
             <group
@@ -334,12 +338,14 @@ const Text = forwardRef(
                 scale-x={Math.abs(
                   caretPositions[selection[0]] - caretPositions[selection[1]]
                 )}
+                renderOrder={2}
               >
                 <planeGeometry args={[1, fontSize]} />
                 <meshBasicMaterial
-                  color="blue"
+                  color="#7777ff"
                   transparent
-                  opacity={0.25}
+                  toneMapped={false}
+                  opacity={1}
                   depthWrite={false}
                   {...stencil}
                 />

@@ -118,8 +118,9 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
       <mesh
         onPointerEnter={() => setHovered(true)}
         onPointerLeave={() => setHovered(false)}
+        renderOrder={1}
       >
-        <boxGeometry args={[width, height, 0.01]} />
+        <planeGeometry args={[width, height]} />
         <meshBasicMaterial
           color={backgroundColor}
           transparent
