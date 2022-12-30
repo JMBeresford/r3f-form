@@ -5,6 +5,8 @@
 > but breaking API changes WILL be likely for the forseeable future.
 
 ## A webGL input field component for use with React Three Fiber
+![image](https://user-images.githubusercontent.com/1373954/210024281-c735f61a-1a69-45e5-a5d3-147ed57a6c30.png)
+
 
 This package aims to create a fully-functional and **accessible** `<Input />`
 component that can be used within the [@react-three/fiber](https://github.com/pmndrs/react-three-fiber)
