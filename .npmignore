@@ -1,6 +1,7 @@
 .storybook/
 node_modules/
 src/
+storybook-static/
 .gitignore
 .npmignore
 rollup.config.js
