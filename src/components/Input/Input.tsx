@@ -24,7 +24,7 @@ export type TroikaTextProps = {
   onSync?: (troika: any) => void;
 } & Omit<JSX.IntrinsicElements["mesh"], "ref" | "type">;
 
-type Props = {
+export type Props = {
   /**
    * Optional ChangeEventHandler that is called when the <input> element changes.
    * Usually used to get the input's text value for form submission.

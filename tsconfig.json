@@ -19,6 +19,6 @@
     "noImplicitThis": false,
     "baseUrl": "./src"
   },
-  "include": ["./src", "typings.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["./src", "./typings.d.ts"],
+  "exclude": ["./node_modules/**/*"]
 }

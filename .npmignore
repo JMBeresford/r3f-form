@@ -1,5 +1,6 @@
 .storybook/
 node_modules/
+.github/
 src/
 storybook-static/
 .gitignore

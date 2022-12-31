@@ -3,6 +3,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import multiInput from "rollup-plugin-multi-input";
 import glslify from "rollup-plugin-glslify";
 import terser from "@rollup/plugin-terser";
+import typescript from "@rollup/plugin-typescript";
 
 const extensions = [".js", ".jsx", ".ts", ".tsx"];
 const root = process.platform === "win32" ? path.resolve("/") : "/";
@@ -15,7 +16,6 @@ export default [
     external,
     plugins: [
       multiInput.default(),
-
       glslify(),
       babel({
         exclude: "node_modules/**",
@@ -69,7 +69,6 @@ export default [
       multiInput.default({
         transformOutputPath: (output) => output.replace(/\.[^/.]+$/, ".cjs.js"),
       }),
-
       glslify(),
       babel({
         exclude: "node_modules/**",
@@ -87,6 +86,7 @@ export default [
           ],
         ],
       }),
+      typescript({ compilerOptions: { module: "esnext" } }),
       resolve({ extensions }),
       terser(),
     ],
@@ -113,6 +113,7 @@ export default [
           ],
         ],
       }),
+      typescript({ compilerOptions: { module: "esnext" } }),
       resolve({ extensions }),
       terser(),
     ],
