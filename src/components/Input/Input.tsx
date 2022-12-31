@@ -2,7 +2,7 @@ import * as React from "react";
 import { useCursor } from "@react-three/drei";
 import { Color } from "@react-three/fiber";
 import { useState, Ref, ChangeEvent, forwardRef } from "react";
-import Label, { LabelProps } from "./Label";
+import Label from "./Label";
 import Text from "./Text";
 
 export type TroikaTextProps = {
@@ -35,6 +35,8 @@ type Props = {
    */
   onChange?: (e: ChangeEvent) => void;
 
+  label?: string;
+
   /** setting this to password will mask the characters with dots */
   type?: "text" | "password";
 
@@ -47,7 +49,7 @@ type Props = {
   textProps?: TroikaTextProps;
 
   /** Same as `textProps` -- but the text content is explicitly set here */
-  labelProps?: LabelProps;
+  labelProps?: TroikaTextProps;
 
   /** width of the container */
   width?: number;
@@ -72,6 +74,7 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
   const {
     onChange,
     type = "text",
+    label,
     textProps,
     labelProps,
     width = 1.5,
@@ -98,7 +101,9 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
   return (
     <group {...restProps}>
       <group position={[-width / 2, height / 1.8, 0]}>
-        <Label color={labelColor} fontSize={labelSize} {...labelProps} />
+        <Label color={labelColor} fontSize={labelSize} {...labelProps}>
+          {label}
+        </Label>
       </group>
       <Text
         ref={ref}
