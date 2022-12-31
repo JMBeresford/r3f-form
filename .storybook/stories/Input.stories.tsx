@@ -62,24 +62,20 @@ const Scene = ({ sphereColor = "red", children }) => (
 
 stories.add("Text Input", () => (
   <Scene sphereColor="blue">
-    <Input labelProps={{ label: "Text Input:" }} />
+    <Input label="Text Input:" />
   </Scene>
 ));
 
 stories.add("Password Input", () => (
   <Scene sphereColor="orange">
-    <Input position-y={0.1} labelProps={{ label: "Username:" }} />
-    <Input
-      position-y={-0.2}
-      type="password"
-      labelProps={{ label: "Password:" }}
-    />
+    <Input position-y={0.1} label="Username:" />
+    <Input position-y={-0.2} type="password" label="Password:" />
   </Scene>
 ));
 
 stories.add("Custom Padding", () => (
   <Scene sphereColor="yellow">
-    <Input padding={[0.1, 1]} labelProps={{ label: "Label:" }} />
+    <Input padding={[0.1, 1]} label="Label:" />
   </Scene>
 ));
 
@@ -89,23 +85,15 @@ stories.add("Custom Color/Opacity", () => (
       backgroundOpacity={0.6}
       backgroundColor="black"
       textProps={{ color: "#cfcfff" }}
-      labelProps={{ label: "Test Color/Opacity" }}
+      label="Test Color/Opacity"
     />
   </Scene>
 ));
 
 stories.add("Adjustable Width", () => (
   <Scene sphereColor="white">
-    <Input
-      position={[-0.75 / 2, 0.1, 0]}
-      width={1}
-      labelProps={{ label: "Smol:" }}
-    />
+    <Input position={[-0.75 / 2, 0.1, 0]} width={1} label="Smol:" />
 
-    <Input
-      position={[0, -0.2, 0]}
-      width={1.75}
-      labelProps={{ label: "Grande:" }}
-    />
+    <Input position={[0, -0.2, 0]} width={1.75} label="Grande:" />
   </Scene>
 ));
