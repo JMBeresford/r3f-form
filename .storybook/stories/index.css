@@ -5,6 +5,10 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+#root {
   user-select: none;
   overflow: hidden;
+
 }
