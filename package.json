@@ -1,6 +1,6 @@
 {
   "name": "@jberesford/r3f-input",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A webGL input field component for use with React Three Fiber",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
