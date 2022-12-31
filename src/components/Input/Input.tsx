@@ -97,12 +97,9 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
 
   return (
     <group {...restProps}>
-      <Label
-        position={[-width / 2, height / 1.8, 0]}
-        color={labelColor}
-        fontSize={labelSize}
-        {...labelProps}
-      />
+      <group position={[-width / 2, height / 1.8, 0]}>
+        <Label color={labelColor} fontSize={labelSize} {...labelProps} />
+      </group>
       <Text
         ref={ref}
         width={width}
