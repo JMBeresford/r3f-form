@@ -1,9 +1,10 @@
 import * as React from "react";
 import { useCursor } from "@react-three/drei";
-import { Color } from "@react-three/fiber";
+import { Color, Vector2 } from "@react-three/fiber";
 import { useState, Ref, ChangeEvent, forwardRef } from "react";
 import Label from "./Label";
 import Text from "./Text";
+import { Vector2 as Vector2Impl } from "three";
 
 export type TroikaTextProps = {
   color?: Color;
@@ -63,7 +64,7 @@ export type Props = {
    * text. The cap height is dependant on both the `textProps.font` being used and the
    * `textProps.fontSize` value
    */
-  padding?: [number, number];
+  padding?: Vector2;
 } & Omit<JSX.IntrinsicElements["group"], "ref" | "type">;
 
 /**
@@ -78,9 +79,9 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
     textProps,
     labelProps,
     width = 1.5,
-    backgroundColor = "black",
-    backgroundOpacity = 0.1,
-    padding = [0.025, 0.1],
+    backgroundColor = "lightgrey",
+    backgroundOpacity = 0.3,
+    padding,
     ...restProps
   } = props;
 
@@ -91,8 +92,14 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
   const fontSize = textProps?.fontSize || 0.0825;
   const fontColor = textProps?.color || "black";
 
-  const paddingY = padding[1] * fontSize;
-  const height = fontSize + paddingY * 2;
+  let _padding = React.useMemo(() => new Vector2Impl(0.02, 0.05), []);
+
+  if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
+    _padding.set(padding[0], padding[1]);
+  } else {
+    _padding.set(0.02, 0.05);
+  }
+  const height = fontSize + _padding.y;
 
   // handle label defaults
   const labelSize = labelProps?.fontSize || 0.07;
@@ -108,7 +115,7 @@ const Input = forwardRef((props: Props, ref: Ref<HTMLInputElement>) => {
       <Text
         ref={ref}
         width={width}
-        padding={padding}
+        padding={_padding}
         height={height}
         onChange={onChange}
         type={type}

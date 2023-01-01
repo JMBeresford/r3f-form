@@ -9,12 +9,6 @@ import { clamp, damp } from "three/src/math/MathUtils";
 
 const stories = storiesOf("Input", module);
 
-export const parameters = {
-  options: {
-    showPanel: false,
-  },
-};
-
 const Rig = () => {
   const camera = useThree((s) => s.camera);
   const viewport = useThree((s) => s.viewport);
@@ -75,7 +69,7 @@ stories.add("Password Input", () => (
 
 stories.add("Custom Padding", () => (
   <Scene sphereColor="yellow">
-    <Input padding={[0.1, 1]} label="Label:" />
+    <Input padding={[0.1, 0.1]} label="Label:" />
   </Scene>
 ));
 
