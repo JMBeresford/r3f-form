@@ -297,7 +297,6 @@ const Text = forwardRef(
                 font={font}
                 anchorX="left"
                 anchorY="top-baseline"
-                // @ts-ignore
                 whiteSpace="nowrap"
                 letterSpacing={type === "password" ? 0.1 : 0}
                 depthOffset={0.5}
