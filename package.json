@@ -1,6 +1,6 @@
 {
   "name": "@jberesford/r3f-input",
-  "version": "1.0.8",
+  "version": "0.0.0-development",
   "description": "A webGL input field component for use with React Three Fiber",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -12,7 +12,8 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "typegen": "tsc --emitDeclarationOnly",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "semantic-release": "semantic-release"
   },
   "author": "John Beresford",
   "license": "MIT",
@@ -46,7 +47,8 @@
     "three": "^0.148.0",
     "troika-three-text": "^0.47.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "semantic-release": "^19.0.5"
   },
   "peerDependencies": {
     "@react-three/drei": ">=9.0",
@@ -55,5 +57,9 @@
     "react-dom": ">=18.0",
     "three": ">=0.146.0",
     "troika-three-text": ">=0.47.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JMBeresford/r3f-input.git"
   }
 }
