@@ -13,7 +13,7 @@ import {
   forwardRef,
   RefObject,
 } from "react";
-import { BufferGeometry, Group, Material, Mesh } from "three";
+import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { damp } from "three/src/math/MathUtils";
 import { TroikaTextProps } from "./Input";
 import { getCaretAtPoint } from "troika-three-text";
@@ -22,7 +22,7 @@ export type TextProps = {
   onChange?: (e: ChangeEvent) => void;
   width: number;
   height: number;
-  padding: [number, number];
+  padding: Vector2;
   type: "text" | "password";
 } & TroikaTextProps;
 
@@ -207,7 +207,7 @@ const Text = forwardRef(
     // EFFECTS
     useEffect(() => {
       let pos: number;
-      let _width = width - padding[0] * width * 2;
+      let _width = width - padding.x;
       let [selectionStart, selectionEnd] = [
         caretPositions[selection[0]] + groupRef.current.position.x,
         caretPositions[selection[1]] + groupRef.current.position.x,
@@ -286,7 +286,7 @@ const Text = forwardRef(
           />
         </Html>
 
-        <group position={[-width / 2 + padding[0] * width, 0, 0]}>
+        <group position={[-width / 2 + padding.x, 0, 0]}>
           <group ref={groupRef}>
             <Suspense fallback={null}>
               <TextImpl
