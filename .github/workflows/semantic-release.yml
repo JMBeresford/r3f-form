@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: "16.x"
       - run: npm ci
+      - run: npm build
       - name: Release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

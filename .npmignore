@@ -5,6 +5,8 @@ src/
 storybook-static/
 .gitignore
 .npmignore
+.npmrc
+.prettierignore
 rollup.config.js
 tsconfig.json
 typings.d.ts
