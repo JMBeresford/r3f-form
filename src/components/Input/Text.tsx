@@ -71,6 +71,14 @@ const Text = forwardRef(
       return caretPositions;
     }, [renderInfo]);
 
+    const caretPosition = useMemo(() => {
+      if (content) {
+        return caretPositions[Math.min(caret, caretPositions.length - 1) || 0];
+      } else {
+        return 0;
+      }
+    }, [caret, caretPositions]);
+
     // EVENTS
     const handleSync = (text: any) => {
       if (text) setRenderInfo(text.textRenderInfo);
@@ -105,9 +113,10 @@ const Text = forwardRef(
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         setContent(e.target.value);
+        time.current = clock.elapsedTime;
         onChange && onChange(e);
       },
-      [onChange]
+      [onChange, clock]
     );
 
     const handleClick = useCallback(
@@ -316,7 +325,7 @@ const Text = forwardRef(
 
             <mesh
               ref={caretRef}
-              position={[content ? caretPositions[caret || 0] : 0, 0, 0]}
+              position={[caretPosition, 0, 0]}
               visible={active && caret !== null}
               renderOrder={3}
             >
