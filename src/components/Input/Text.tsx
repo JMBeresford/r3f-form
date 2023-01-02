@@ -213,14 +213,14 @@ const Text = forwardRef(
     // EFFECTS
     useEffect(() => {
       let pos: number;
-      const _width = width - padding.x;
+      const innerWidth = width - padding.x * 2;
       const [selectionStart, selectionEnd] = [
         caretPositions[selection[0]] + groupRef.current.position.x,
         caretPositions[selection[1]] + groupRef.current.position.x,
       ];
 
       let left = 0;
-      const right = _width;
+      const right = innerWidth;
 
       if (caret !== null) {
         pos = caretPositions[caret] + groupRef.current.position.x;
@@ -270,7 +270,7 @@ const Text = forwardRef(
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
         >
-          <planeGeometry args={[width, height]} />
+          <planeGeometry args={[width - padding.x, height]} />
         </Mask>
 
         <Html distanceFactor={3}>
