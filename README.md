@@ -13,7 +13,7 @@
 
 This package aims to create a fully-functional and **accessible** `<Input />`
 component that can be used within the [@react-three/fiber](https://github.com/pmndrs/react-three-fiber)
-ecosystem. Ultimately, the goal is fully support the entirety of the existing HTML `<form>` spec.
+ecosystem. Ultimately, the goal is to have fully functioning HTML `<form>`s -- with all viable input types -- rendered in webGL.
 
 Current implementation of `<Input />` binds webGL elements to the existing state and event systems of a
 hidden HTML `<input>` element. There is a heavy reliance on
