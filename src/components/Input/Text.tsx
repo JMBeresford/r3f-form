@@ -58,13 +58,11 @@ const Text = forwardRef(
     const caretPositions: number[] = useMemo(() => {
       if (!renderInfo?.caretPositions) return [0];
 
-      let lastCaret =
+      const lastCaret =
         renderInfo.caretPositions[renderInfo.caretPositions.length - 2];
 
       const caretPositions = [
-        ...renderInfo.caretPositions.filter(
-          (_: any, idx: number) => idx % 3 === 0
-        ),
+        ...renderInfo.caretPositions.filter((_, idx: number) => idx % 3 === 0),
       ];
 
       caretPositions.push(lastCaret);
@@ -77,10 +75,10 @@ const Text = forwardRef(
       } else {
         return 0;
       }
-    }, [caret, caretPositions]);
+    }, [caret, caretPositions, content]);
 
     // EVENTS
-    const handleSync = (text: any) => {
+    const handleSync = (text) => {
       if (text) setRenderInfo(text.textRenderInfo);
     };
 
@@ -89,23 +87,25 @@ const Text = forwardRef(
       setActive(true);
     };
 
-    const handleBlur = (e: FocusEvent) => {
+    const handleBlur = () => {
       setSelection([0, 0]);
       setActive(false);
     };
 
     const handleSelect = useCallback(
-      (e) => {
-        const { selectionStart, selectionEnd } = e.target;
+      (e: React.SyntheticEvent<HTMLInputElement, Event>) => {
+        if (e.target instanceof HTMLInputElement) {
+          const { selectionStart, selectionEnd } = e.target;
 
-        if (selectionStart === selectionEnd) {
-          setCaret(selectionStart);
-        } else {
-          setCaret(null);
+          if (selectionStart === selectionEnd) {
+            setCaret(selectionStart);
+          } else {
+            setCaret(null);
+          }
+
+          setSelection([selectionStart, selectionEnd]);
+          time.current = clock.elapsedTime;
         }
-
-        setSelection([selectionStart, selectionEnd]);
-        time.current = clock.elapsedTime;
       },
       [clock]
     );
@@ -132,38 +132,35 @@ const Text = forwardRef(
       [active, domRef]
     );
 
-    const handleDoubleClick = useCallback(
-      (e: ThreeEvent<MouseEvent>) => {
-        function isWhitespace(str: string): boolean {
-          return str && str.trim() === "";
+    const handleDoubleClick = useCallback(() => {
+      function isWhitespace(str: string): boolean {
+        return str && str.trim() === "";
+      }
+
+      let start = 0,
+        end: number = content.length;
+
+      if (type === "password") {
+        domRef.current.select();
+        return;
+      }
+
+      for (let i = caret; i < content.length; i++) {
+        if (isWhitespace(content[i])) {
+          end = i;
+          break;
         }
+      }
 
-        let start: number = 0,
-          end: number = content.length;
-
-        if (type === "password") {
-          domRef.current.select();
-          return;
+      for (let i = caret; i > 0; i--) {
+        if (isWhitespace(content[i])) {
+          start = i > 0 ? i + 1 : i;
+          break;
         }
+      }
 
-        for (let i = caret; i < content.length; i++) {
-          if (isWhitespace(content[i])) {
-            end = i;
-            break;
-          }
-        }
-
-        for (let i = caret; i > 0; i--) {
-          if (isWhitespace(content[i])) {
-            start = i > 0 ? i + 1 : i;
-            break;
-          }
-        }
-
-        domRef.current.setSelectionRange(start, end, "none");
-      },
-      [caret, content, type, domRef]
-    );
+      domRef.current.setSelectionRange(start, end, "none");
+    }, [caret, content, type, domRef]);
 
     const handlePointerDown = useCallback(
       (e: ThreeEvent<PointerEvent>) => {
@@ -173,8 +170,8 @@ const Text = forwardRef(
           return;
         }
 
-        let point = textRef.current.worldToLocal(e.point);
-        let idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
+        const point = textRef.current.worldToLocal(e.point);
+        const idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
         setSelection([idx, idx]);
         setCaret(idx);
         domRef.current.setSelectionRange(idx, idx, "none");
@@ -184,14 +181,14 @@ const Text = forwardRef(
 
     const handlePointerMove = useCallback(
       (e: ThreeEvent<PointerEvent>) => {
-        let buttons = e.buttons;
+        const buttons = e.buttons;
 
         // left click not held (i.e. not dragging)
-        let dragging = buttons === 1 || buttons === 3;
+        const dragging = buttons === 1 || buttons === 3;
         if (!dragging || !renderInfo || !content) return;
 
-        let point = textRef.current.worldToLocal(e.point);
-        let idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
+        const point = textRef.current.worldToLocal(e.point);
+        const idx = getCaretAtPoint(renderInfo, point.x, point.y).charIndex;
         let start: number, end: number, dir: "forward" | "backward" | "none";
 
         if (idx < caret) {
@@ -216,14 +213,14 @@ const Text = forwardRef(
     // EFFECTS
     useEffect(() => {
       let pos: number;
-      let _width = width - padding.x;
-      let [selectionStart, selectionEnd] = [
+      const _width = width - padding.x;
+      const [selectionStart, selectionEnd] = [
         caretPositions[selection[0]] + groupRef.current.position.x,
         caretPositions[selection[1]] + groupRef.current.position.x,
       ];
 
       let left = 0;
-      let right = _width;
+      const right = _width;
 
       if (caret !== null) {
         pos = caretPositions[caret] + groupRef.current.position.x;
@@ -233,7 +230,7 @@ const Text = forwardRef(
         }
         if (pos === undefined || Number.isNaN(pos)) return;
       } else {
-        let dir = domRef.current.selectionDirection;
+        const dir = domRef.current.selectionDirection;
         if (selectionStart < left && dir === "backward") {
           pos = selectionStart;
         } else if (selectionEnd > right && dir === "forward") {
@@ -242,10 +239,10 @@ const Text = forwardRef(
       }
 
       if (pos > right) {
-        let dx = pos - right;
+        const dx = pos - right;
         groupRef.current.position.x -= dx;
       } else if (pos < left) {
-        let dx = left - pos;
+        const dx = left - pos;
         groupRef.current.position.x += dx;
       }
     }, [width, padding, caret, caretPositions, selection, domRef]);
@@ -253,8 +250,8 @@ const Text = forwardRef(
     useFrame((_, delta) => {
       if (!caretRef.current) return;
 
-      let t = (clock.elapsedTime - time.current) % 2;
-      let opacity = t <= 1.25 ? 1 : 0;
+      const t = (clock.elapsedTime - time.current) % 2;
+      const opacity = t <= 1.25 ? 1 : 0;
 
       caretRef.current.material.opacity = damp(
         caretRef.current.material.opacity,
