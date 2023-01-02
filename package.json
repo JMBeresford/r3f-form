@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "typegen": "tsc --emitDeclarationOnly",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "semantic-release": "semantic-release --branches main"
