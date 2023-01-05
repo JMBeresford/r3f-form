@@ -152,10 +152,6 @@ Similar to the `<Input />` component, you can also create a `<Textarea />` like 
 ```jsx
 import { Textarea } from "@jberesford/r3f-input";
 
-/*
- * backgroundOpacity defaults to 0.1
- */
-
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
@@ -164,3 +160,5 @@ export function App() {
   );
 }
 ```
+
+![image](https://user-images.githubusercontent.com/1373954/210699887-e0a5c165-d58b-4755-ae79-761d4ecf7f4e.png)
