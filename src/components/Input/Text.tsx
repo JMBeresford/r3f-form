@@ -15,7 +15,7 @@ import {
 } from "react";
 import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { damp } from "three/src/math/MathUtils";
-import { TroikaTextProps } from "./Input";
+import { TroikaTextProps } from "types";
 import { getCaretAtPoint } from "troika-three-text";
 
 export type TextProps = {

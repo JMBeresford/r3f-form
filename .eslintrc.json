@@ -26,7 +26,14 @@
       }
     }
   },
-  "overrides": [],
+  "overrides": [
+    {
+      "files": ["src"],
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      }
+    }
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -45,6 +52,7 @@
     "import/export": "error",
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

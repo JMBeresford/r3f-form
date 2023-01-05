@@ -5,25 +5,7 @@ import { useState, Ref, ChangeEvent, forwardRef } from "react";
 import Label from "./Label";
 import Text from "./Text";
 import { Vector2 as Vector2Impl } from "three";
-
-export type TroikaTextProps = {
-  color?: Color;
-  fontSize?: number;
-  letterSpacing?: number;
-  font?: string;
-  depthOffset?: number;
-  outlineWidth?: number | string;
-  outlineOffsetX?: number | string;
-  outlineOffsetY?: number | string;
-  outlineBlur?: number | string;
-  outlineColor?: Color;
-  outlineOpacity?: number;
-  strokeWidth?: number | string;
-  strokeColor?: Color;
-  strokeOpacity?: number;
-  fillOpacity?: number;
-  onSync?: (troika: any) => void;
-} & Omit<JSX.IntrinsicElements["mesh"], "ref" | "type">;
+import { TroikaTextProps } from "types";
 
 export type Props = {
   /**
@@ -58,7 +40,7 @@ export type Props = {
   backgroundColor?: Color;
   backgroundOpacity?: number;
 
-  /** [left/right , top/bottom] in % of width and height, respectively
+  /** [left/right , top/bottom] in THREE units, respectively
    *
    * note that height is implicitly defined by the capHeight of the rendered
    * text. The cap height is dependant on both the `textProps.font` being used and the

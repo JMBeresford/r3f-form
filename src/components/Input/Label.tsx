@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text } from "@react-three/drei";
-import { TroikaTextProps } from "./Input";
+import { TroikaTextProps } from "types";
 
 const Label = (props: TroikaTextProps) => {
   const { children, position, ...restProps } = props;
