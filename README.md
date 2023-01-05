@@ -144,3 +144,23 @@ export function App() {
 
 > NOTE: The `textProps` and `labelProps` props can take _almost_ all of the properties that are supported
 > by the underlying [troika-three-text](https://github.com/protectwise/troika/tree/main/packages/troika-three-text) mesh.
+
+---
+
+Similar to the `<Input />` component, you can also create a `<Textarea />` like so:
+
+```jsx
+import { Textarea } from "@jberesford/r3f-input";
+
+/*
+ * backgroundOpacity defaults to 0.1
+ */
+
+export function App() {
+  return (
+    <Canvas camera={{ position: [0, 0, 1] }}>
+      <Textarea label="Default Textarea:" />
+    </Canvas>
+  );
+}
+```
