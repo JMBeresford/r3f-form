@@ -1,6 +1,6 @@
 # r3f-form
 
-### [View examples](https://jmberesford.github.io/r3f-input/?path=/story/input--text-input)
+### [View examples](https://jmberesford.github.io/r3f-form/?path=/story/form--default-submit-button)
 
 > ## WARNING: UNDER HEAVY DEVELOPMENT
 >
