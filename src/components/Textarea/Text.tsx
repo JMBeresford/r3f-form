@@ -1,5 +1,6 @@
-import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { TroikaTextProps } from "types";
 import { Html, Mask, Text as TextImpl, useMask } from "@react-three/drei";
 import {
@@ -8,12 +9,14 @@ import {
 } from "troika-three-text";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { damp } from "three/src/math/MathUtils";
+import { useFormContext } from "../Form";
 
 export type TextProps = {
   onChange?: (e: React.ChangeEvent) => void;
   width: number;
   height: number;
   rows: number;
+  name?: string;
   padding: Vector2;
 } & TroikaTextProps;
 
@@ -36,6 +39,7 @@ const Text = React.forwardRef(
       width,
       height,
       rows,
+      name,
       padding,
       fontSize,
       color = "black",
@@ -48,8 +52,15 @@ const Text = React.forwardRef(
     const caretRef = React.useRef<Mesh<BufferGeometry, Material>>();
     const time = React.useRef<number>(0);
     const textRef = React.useRef<Mesh<BufferGeometry, Material>>();
+    const formNode = useFormContext();
     const clock = useThree((s) => s.clock);
+    const events = useThree((s) => s.events);
+    const gl = useThree((s) => s.gl);
     const stencil = useMask(2);
+    const root = React.useRef<ReactDOM.Root>(null);
+    const target = (formNode?.current ||
+      events.connected ||
+      gl.domElement.parentNode) as HTMLElement;
 
     // STATE
     const [content, setContent] = React.useState<string>("");
@@ -58,6 +69,7 @@ const Text = React.forwardRef(
     const [caret, setCaret] = React.useState<number>(0);
     const [font, setFont] = React.useState<FontFace>(null);
     const [selection, setSelection] = React.useState<[number, number]>([0, 0]);
+    const [domEl] = React.useState(() => document.createElement("div"));
 
     const caretPositions: CaretPosition[] = React.useMemo(() => {
       if (!renderInfo?.caretPositions) return [{ x: 0, y: 0 }];
@@ -249,9 +261,45 @@ const Text = React.forwardRef(
     );
 
     // EFFECTS
+    React.useLayoutEffect(() => {
+      const curRoot = (root.current = ReactDOM.createRoot(domEl));
+
+      target?.appendChild(domEl);
+
+      return () => {
+        target?.removeChild(domEl);
+        curRoot.unmount();
+      };
+    }, [domEl, target]);
+
+    React.useLayoutEffect(() => {
+      root.current?.render(
+        <textarea
+          ref={domRef}
+          rows={rows}
+          name={name}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onSelect={handleSelect}
+          style={{
+            position: "absolute",
+            left: "-1000vw",
+            touchAction: "none",
+            pointerEvents: "none",
+            fontFamily: "r3f-input",
+            fontSize: `${fontSize * 100}px`,
+            width: `${(width - padding.x * 2) * 100}px`,
+            opacity: 0,
+          }}
+        />
+      );
+    });
+
     React.useEffect(() => {
       if (!renderInfo?.parameters.font) return;
 
+      // TODO: figure out how to get proper font-name
       let f = new FontFace("r3f-input", `url(${renderInfo?.parameters.font})`);
       // @ts-ignore
       document.fonts.add(f);
@@ -298,26 +346,6 @@ const Text = React.forwardRef(
         >
           <planeGeometry args={[width - padding.x, height - padding.y / 2]} />
         </Mask>
-        <Html distanceFactor={10}>
-          <textarea
-            ref={domRef}
-            rows={rows}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onSelect={handleSelect}
-            style={{
-              position: "absolute",
-              left: "-1000vw",
-              touchAction: "none",
-              pointerEvents: "none",
-              fontFamily: "r3f-input",
-              fontSize: `${fontSize * 100}px`,
-              width: `${(width - padding.x * 2) * 100}px`,
-              opacity: 0,
-            }}
-          />
-        </Html>
 
         <group ref={groupRef}>
           <group

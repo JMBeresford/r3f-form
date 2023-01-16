@@ -1,33 +1,24 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 import { Html, Mask, Text as TextImpl, useMask } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
-import {
-  Suspense,
-  useMemo,
-  useState,
-  useRef,
-  useCallback,
-  ChangeEvent,
-  FocusEvent,
-  useEffect,
-  forwardRef,
-  RefObject,
-} from "react";
 import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { damp } from "three/src/math/MathUtils";
 import { TroikaTextProps } from "types";
 import { getCaretAtPoint } from "troika-three-text";
+import { useFormContext } from "../../../Form";
 
 export type TextProps = {
-  onChange?: (e: ChangeEvent) => void;
+  onChange?: (e: React.ChangeEvent) => void;
   width: number;
   height: number;
   padding: Vector2;
   type: "text" | "password";
+  name?: string;
 } & TroikaTextProps;
 
-const Text = forwardRef(
-  (props: TextProps, ref: RefObject<HTMLInputElement>) => {
+const Text = React.forwardRef(
+  (props: TextProps, ref: React.MutableRefObject<HTMLInputElement>) => {
     const {
       fontSize,
       font,
@@ -37,25 +28,34 @@ const Text = forwardRef(
       height,
       type,
       onChange,
+      name,
       ...restProps
     } = props;
-    const localRef = useRef<HTMLInputElement>();
+    const localRef = React.useRef<HTMLInputElement>();
     const domRef = ref || localRef;
-    const textRef = useRef<Mesh<BufferGeometry, Material>>();
-    const groupRef = useRef<Group>();
-    const caretRef = useRef<Mesh<BufferGeometry, Material>>();
+    const textRef = React.useRef<Mesh<BufferGeometry, Material>>();
+    const groupRef = React.useRef<Group>();
+    const caretRef = React.useRef<Mesh<BufferGeometry, Material>>();
     const stencil = useMask(1);
+    const events = useThree((s) => s.events);
+    const gl = useThree((s) => s.gl);
+    const formNode = useFormContext();
+    const root = React.useRef<ReactDOM.Root>(null);
+    const target = (formNode?.current ||
+      events.connected ||
+      gl.domElement.parentNode) as HTMLElement;
 
     // STATE
     const clock = useThree((s) => s.clock);
-    const time = useRef<number>(0);
-    const [active, setActive] = useState<boolean>(false);
-    const [content, setContent] = useState<string>("");
-    const [caret, setCaret] = useState<number>(0);
-    const [selection, setSelection] = useState<[number, number]>([0, 0]);
-    const [renderInfo, setRenderInfo] = useState(null);
+    const time = React.useRef<number>(0);
+    const [domEl] = React.useState(() => document.createElement("div"));
+    const [active, setActive] = React.useState<boolean>(false);
+    const [content, setContent] = React.useState<string>("");
+    const [caret, setCaret] = React.useState<number>(0);
+    const [selection, setSelection] = React.useState<[number, number]>([0, 0]);
+    const [renderInfo, setRenderInfo] = React.useState(null);
 
-    const caretPositions: number[] = useMemo(() => {
+    const caretPositions: number[] = React.useMemo(() => {
       if (!renderInfo?.caretPositions) return [0];
 
       const lastCaret =
@@ -69,7 +69,7 @@ const Text = forwardRef(
       return caretPositions;
     }, [renderInfo]);
 
-    const caretPosition = useMemo(() => {
+    const caretPosition = React.useMemo(() => {
       if (content) {
         return caretPositions[Math.min(caret, caretPositions.length - 1) || 0];
       } else {
@@ -78,11 +78,11 @@ const Text = forwardRef(
     }, [caret, caretPositions, content]);
 
     // EVENTS
-    const handleSync = (text) => {
+    const handleSync = (text: { textRenderInfo: object }) => {
       if (text) setRenderInfo(text.textRenderInfo);
     };
 
-    const handleFocus = (e: FocusEvent) => {
+    const handleFocus = (e: React.FocusEvent) => {
       e.nativeEvent.preventDefault();
       setActive(true);
     };
@@ -92,7 +92,7 @@ const Text = forwardRef(
       setActive(false);
     };
 
-    const handleSelect = useCallback(
+    const handleSelect = React.useCallback(
       (e: React.SyntheticEvent<HTMLInputElement, Event>) => {
         if (e.target instanceof HTMLInputElement) {
           const { selectionStart, selectionEnd } = e.target;
@@ -110,8 +110,8 @@ const Text = forwardRef(
       [clock]
     );
 
-    const handleChange = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
         setContent(e.target.value);
         time.current = clock.elapsedTime;
         onChange && onChange(e);
@@ -119,7 +119,7 @@ const Text = forwardRef(
       [onChange, clock]
     );
 
-    const handleClick = useCallback(
+    const handleClick = React.useCallback(
       (e: ThreeEvent<MouseEvent>) => {
         if (!active) {
           domRef.current.focus();
@@ -132,7 +132,7 @@ const Text = forwardRef(
       [active, domRef]
     );
 
-    const handleDoubleClick = useCallback(() => {
+    const handleDoubleClick = React.useCallback(() => {
       function isWhitespace(str: string): boolean {
         return str && str.trim() === "";
       }
@@ -162,7 +162,7 @@ const Text = forwardRef(
       domRef.current.setSelectionRange(start, end, "none");
     }, [caret, content, type, domRef]);
 
-    const handlePointerDown = useCallback(
+    const handlePointerDown = React.useCallback(
       (e: ThreeEvent<PointerEvent>) => {
         time.current = clock.elapsedTime;
 
@@ -179,7 +179,7 @@ const Text = forwardRef(
       [domRef, renderInfo, clock, content]
     );
 
-    const handlePointerMove = useCallback(
+    const handlePointerMove = React.useCallback(
       (e: ThreeEvent<PointerEvent>) => {
         const buttons = e.buttons;
 
@@ -211,7 +211,40 @@ const Text = forwardRef(
     );
 
     // EFFECTS
-    useEffect(() => {
+    React.useLayoutEffect(() => {
+      const curRoot = (root.current = ReactDOM.createRoot(domEl));
+
+      target?.appendChild(domEl);
+
+      return () => {
+        target?.removeChild(domEl);
+        curRoot.unmount();
+      };
+    }, [domEl, target]);
+
+    React.useLayoutEffect(() => {
+      root.current?.render(
+        <input
+          ref={domRef}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onSelect={handleSelect}
+          name={name}
+          style={{
+            position: "absolute",
+            left: "-1000vw",
+            transform: "translateX(-50%)",
+            width: `${10 * width}em`,
+            touchAction: "none",
+            pointerEvents: "none",
+            opacity: 0,
+          }}
+        />
+      );
+    });
+
+    React.useEffect(() => {
       let pos: number;
       const innerWidth = width - padding.x * 2;
       const [selectionStart, selectionEnd] = [
@@ -273,28 +306,9 @@ const Text = forwardRef(
           <planeGeometry args={[width - padding.x, height]} />
         </Mask>
 
-        <Html distanceFactor={3}>
-          <input
-            ref={domRef}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onSelect={handleSelect}
-            style={{
-              position: "absolute",
-              left: "-1000vw",
-              transform: "translateX(-50%)",
-              width: `${10 * width}em`,
-              touchAction: "none",
-              pointerEvents: "none",
-              opacity: 0,
-            }}
-          />
-        </Html>
-
         <group position={[-width / 2 + padding.x, 0, 0]}>
           <group ref={groupRef}>
-            <Suspense fallback={null}>
+            <React.Suspense fallback={null}>
               <TextImpl
                 ref={textRef}
                 renderOrder={3}
@@ -318,7 +332,7 @@ const Text = forwardRef(
                   depthWrite={false}
                 />
               </TextImpl>
-            </Suspense>
+            </React.Suspense>
 
             <mesh
               ref={caretRef}
