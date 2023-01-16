@@ -18,10 +18,10 @@ const Container = (props: Props) => {
 
   return (
     <mesh
-      {...restProps}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       renderOrder={1}
+      {...restProps}
     >
       <planeGeometry args={[width, height]} />
       <meshBasicMaterial

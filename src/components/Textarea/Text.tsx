@@ -7,9 +7,10 @@ import {
   getCaretAtPoint as getCaretAtPointBuiltIn,
   getSelectionRects,
 } from "troika-three-text";
-import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
+import { Color, ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { damp } from "three/src/math/MathUtils";
 import { useFormContext } from "../Form";
+import Container from "./Container";
 
 export type TextProps = {
   onChange?: (e: React.ChangeEvent) => void;
@@ -19,6 +20,8 @@ export type TextProps = {
   name?: string;
   padding: Vector2;
   cursorWidth?: number;
+  backgroundColor?: Color;
+  backgroundOpacity?: number;
 } & TroikaTextProps;
 
 type SelectionRect = {
@@ -45,6 +48,8 @@ const Text = React.forwardRef(
       fontSize,
       cursorWidth = 0.005,
       color = "black",
+      backgroundColor,
+      backgroundOpacity,
       ...restProps
     } = props;
 
@@ -345,18 +350,21 @@ const Text = React.forwardRef(
           onDoubleClick={handleDoubleClick}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
+          position-y={-(height - padding.y) / 2 + renderInfo?.lineHeight / 2}
         >
           <planeGeometry args={[width - padding.x, height - padding.y / 2]} />
         </Mask>
 
+        <Container
+          position-y={-(height - padding.y) / 2 + renderInfo?.lineHeight / 2}
+          width={width}
+          height={height}
+          backgroundColor={backgroundColor}
+          backgroundOpacity={backgroundOpacity}
+        />
+
         <group ref={groupRef}>
-          <group
-            position={[
-              -width / 2 + padding.x,
-              (height - padding.y) / 2 - renderInfo?.lineHeight / 2,
-              0,
-            ]}
-          >
+          <group position={[-width / 2 + padding.x, 0, 0]}>
             <TextImpl
               ref={textRef}
               fontSize={fontSize}

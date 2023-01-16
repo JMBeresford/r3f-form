@@ -73,21 +73,21 @@ const InputText = React.forwardRef(
     const fontSize = textProps?.fontSize || 0.0825;
     const fontColor = textProps?.color || "black";
 
-    let _padding = React.useMemo(() => new Vector2Impl(0.02, 0.05), []);
+    let _padding = React.useMemo(() => new Vector2Impl(), []);
 
     if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
       _padding.set(padding[0], padding[1]);
     } else {
-      _padding.set(0.02, 0.05);
+      _padding.set(0.02, 0.02);
     }
-    const height = fontSize + _padding.y;
+    const height = fontSize + _padding.y * 2;
 
     // handle label defaults
     const labelSize = labelProps?.fontSize || 0.07;
     const labelColor = labelProps?.color || "black";
     return (
       <>
-        <group position={[-width / 2, height / 1.8, 0]}>
+        <group position={[-width / 2, height / 2, 0]}>
           <Label color={labelColor} fontSize={labelSize} {...labelProps}>
             {label}
           </Label>

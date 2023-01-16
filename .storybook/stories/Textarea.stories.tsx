@@ -28,3 +28,9 @@ stories.add("Custom Cursor Width", () => (
     <Textarea label="Cursor Width:" cursorWidth={0.025} />
   </Scene>
 ));
+
+stories.add("More rows", () => (
+  <Scene lightColor="blue">
+    <Textarea label="Cursor Width:" rows={6} />
+  </Scene>
+));

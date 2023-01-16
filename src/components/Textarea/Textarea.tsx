@@ -1,7 +1,6 @@
 import * as React from "react";
 import { TroikaTextProps } from "types";
 import { Color, Vector2 } from "@react-three/fiber";
-import Container from "./Container";
 import { Vector2 as Vector2Impl } from "three";
 import Label from "./Label";
 import Text from "./Text";
@@ -88,7 +87,7 @@ const Textarea = React.forwardRef(
 
     return (
       <group {...restProps}>
-        <group position={[-width / 2, height / 1.8, 0]}>
+        <group position={[-width / 2, (fontSize + _padding.y * 2) / 2, 0]}>
           <Label {...labelProps}>{label}</Label>
         </group>
 
@@ -102,14 +101,9 @@ const Textarea = React.forwardRef(
           fontSize={fontSize}
           rows={rows}
           cursorWidth={cursorWidth}
-          {...textProps}
-        />
-
-        <Container
-          width={width}
-          height={height}
           backgroundColor={backgroundColor}
           backgroundOpacity={backgroundOpacity}
+          {...textProps}
         />
       </group>
     );
