@@ -16,5 +16,6 @@ export type TroikaTextProps = {
   strokeColor?: Color;
   strokeOpacity?: number;
   fillOpacity?: number;
+  fillColor?: Color;
   onSync?: (troika: any) => void;
 } & Omit<JSX.IntrinsicElements["mesh"], "ref" | "type">;

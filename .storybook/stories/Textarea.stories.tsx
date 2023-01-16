@@ -22,3 +22,9 @@ stories.add("Custom Fonts", () => (
     />
   </Scene>
 ));
+
+stories.add("Custom Cursor Width", () => (
+  <Scene lightColor="blue">
+    <Textarea label="Cursor Width:" cursorWidth={0.025} />
+  </Scene>
+));

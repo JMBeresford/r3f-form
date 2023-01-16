@@ -15,6 +15,7 @@ export type TextProps = {
   padding: Vector2;
   type: "text" | "password";
   name?: string;
+  cursorWidth?: number;
 } & TroikaTextProps;
 
 const Text = React.forwardRef(
@@ -29,6 +30,7 @@ const Text = React.forwardRef(
       type,
       onChange,
       name,
+      cursorWidth = 0.005,
       ...restProps
     } = props;
     const localRef = React.useRef<HTMLInputElement>();
@@ -334,15 +336,23 @@ const Text = React.forwardRef(
               </TextImpl>
             </React.Suspense>
 
-            <mesh
-              ref={caretRef}
-              position={[caretPosition, 0, 0]}
-              visible={active && caret !== null}
-              renderOrder={3}
-            >
-              <planeGeometry args={[0.005, fontSize]} />
-              <meshBasicMaterial color={color} transparent toneMapped={false} />
-            </mesh>
+            <group position-x={cursorWidth / 2}>
+              <mesh
+                ref={caretRef}
+                position={[caretPosition, 0, 0]}
+                visible={active && caret !== null}
+                renderOrder={3}
+                scale-x={cursorWidth}
+              >
+                <planeGeometry args={[1, fontSize]} />
+                <meshBasicMaterial
+                  color={color}
+                  transparent
+                  toneMapped={false}
+                  depthWrite={false}
+                />
+              </mesh>
+            </group>
 
             <group
               position={[

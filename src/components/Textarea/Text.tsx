@@ -18,6 +18,7 @@ export type TextProps = {
   rows: number;
   name?: string;
   padding: Vector2;
+  cursorWidth?: number;
 } & TroikaTextProps;
 
 type SelectionRect = {
@@ -42,6 +43,7 @@ const Text = React.forwardRef(
       name,
       padding,
       fontSize,
+      cursorWidth = 0.005,
       color = "black",
       ...restProps
     } = props;
@@ -377,15 +379,23 @@ const Text = React.forwardRef(
               />
             </TextImpl>
 
-            <mesh
-              ref={caretRef}
-              position={[caretPosition?.x, caretPosition?.y, 0]}
-              visible={active && caret !== null}
-              renderOrder={3}
-            >
-              <planeGeometry args={[0.005, fontSize]} />
-              <meshBasicMaterial color={color} transparent toneMapped={false} />
-            </mesh>
+            <group position-x={cursorWidth / 2}>
+              <mesh
+                ref={caretRef}
+                position={[caretPosition?.x, caretPosition?.y, 0]}
+                visible={active && caret !== null}
+                renderOrder={3}
+                scale-x={cursorWidth}
+              >
+                <planeGeometry args={[1, fontSize]} />
+                <meshBasicMaterial
+                  color={color}
+                  transparent
+                  toneMapped={false}
+                  depthWrite={false}
+                />
+              </mesh>
+            </group>
 
             <group position-y={renderInfo?.descender}>
               {selectionRects?.map((rect: SelectionRect, idx: number) => {

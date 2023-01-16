@@ -47,6 +47,7 @@ export type InputTextProps = {
    * `textProps.fontSize` value
    */
   padding?: Vector2;
+  cursorWidth?: number;
 };
 
 const InputText = React.forwardRef(
@@ -62,6 +63,7 @@ const InputText = React.forwardRef(
       backgroundColor = "lightgrey",
       backgroundOpacity = 0.3,
       padding,
+      cursorWidth,
     } = props;
 
     const [hovered, setHovered] = React.useState<boolean>(false);
@@ -100,6 +102,7 @@ const InputText = React.forwardRef(
           fontSize={fontSize}
           color={fontColor}
           name={name ?? label}
+          cursorWidth={cursorWidth}
           {...textProps}
         />
 

@@ -53,6 +53,7 @@ type TextareaProps = {
    * `textProps.fontSize` value
    */
   padding?: Vector2;
+  cursorWidth?: number;
 };
 
 type Props = TextareaProps & GroupProps;
@@ -70,6 +71,7 @@ const Textarea = React.forwardRef(
       backgroundColor = "lightgrey",
       backgroundOpacity = 0.3,
       padding,
+      cursorWidth,
       ...restProps
     } = props;
 
@@ -99,6 +101,7 @@ const Textarea = React.forwardRef(
           onChange={onChange}
           fontSize={fontSize}
           rows={rows}
+          cursorWidth={cursorWidth}
           {...textProps}
         />
 

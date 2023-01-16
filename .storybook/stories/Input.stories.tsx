@@ -44,3 +44,10 @@ stories.add("Adjustable Width", () => (
     <Input position={[0, -0.2, 0]} width={1.75} label="Grande:" />
   </Scene>
 ));
+
+stories.add("Custom Cursor Width", () => (
+  <Scene lightColor="orange">
+    <Input position-y={0.1} width={1.75} label="Regular:" />
+    <Input position-y={-0.2} width={1.75} label="Larger:" cursorWidth={0.05} />
+  </Scene>
+));
