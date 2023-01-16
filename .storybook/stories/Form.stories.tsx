@@ -26,8 +26,6 @@ const handleSubmit = (e: FormEvent, ref) => {
 
     window.alert(res);
   }
-
-  return false;
 };
 
 stories.add("Default Submit Button", () => {
@@ -47,7 +45,7 @@ stories.add("Default Submit Button", () => {
         <Input
           type="submit"
           position-y={-0.55}
-          value="submit"
+          value="Login"
           backgroundColor="#AA99FF"
         />
       </Form>

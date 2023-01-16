@@ -1,5 +1,5 @@
 {
-  "name": "@jberesford/r3f-input",
+  "name": "r3f-form",
   "version": "0.0.0-development",
   "description": "A webGL input field component for use with React Three Fiber",
   "main": "dist/index.cjs.js",
@@ -70,6 +70,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/JMBeresford/r3f-input.git"
+    "url": "https://github.com/JMBeresford/r3f-form.git"
   }
 }
