@@ -321,7 +321,7 @@ const Text = React.forwardRef(
                 anchorY="top-baseline"
                 whiteSpace="nowrap"
                 letterSpacing={type === "password" ? 0.1 : 0}
-                depthOffset={0.5}
+                depthOffset={-0.5}
                 position={[0, -renderInfo?.capHeight / 2, 0]}
                 {...restProps}
               >
@@ -330,8 +330,8 @@ const Text = React.forwardRef(
                   color={color}
                   transparent
                   toneMapped={false}
-                  {...stencil}
                   depthWrite={false}
+                  {...stencil}
                 />
               </TextImpl>
             </React.Suspense>

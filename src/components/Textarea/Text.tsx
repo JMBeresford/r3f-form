@@ -405,7 +405,7 @@ const Text = React.forwardRef(
                 const x = (rect.right + rect.left) / 2;
                 const y = (rect.top + rect.bottom) / 2;
                 return (
-                  <mesh key={idx} position={[x, y, 0]}>
+                  <mesh key={idx} position={[x, y, 0]} renderOrder={2}>
                     <planeGeometry args={[w, h]} />
                     <meshBasicMaterial
                       color="#7777ff"
