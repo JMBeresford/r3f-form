@@ -1,14 +1,12 @@
 import * as React from "react";
-import { TroikaTextProps } from "types";
-import { Color, Vector2 } from "@react-three/fiber";
-import Container from "./Container";
-import { Vector2 as Vector2Impl } from "three";
 import Label from "./Label";
 import Text from "./Text";
+import { useCursor } from "@react-three/drei";
+import { TroikaTextProps } from "types";
+import { Color, Vector2 } from "@react-three/fiber";
+import { Vector2 as Vector2Impl } from "three";
 
-type GroupProps = Omit<JSX.IntrinsicElements["group"], "ref" | "type">;
-
-type TextareaProps = {
+export type InputTextProps = {
   /**
    * Optional ChangeEventHandler that is called when the <input> element changes.
    * Usually used to get the input's text value for form submission.
@@ -19,15 +17,11 @@ type TextareaProps = {
    */
   onChange?: (e: React.ChangeEvent) => void;
 
-  /**
-   * vertical size of container in rows that are of height `fontSize`
-   *
-   * @default 4
-   */
-  rows?: number;
-
   label?: string;
   name?: string;
+
+  /** setting this to password will mask the characters with dots */
+  type?: "text" | "password";
 
   /**
    * Props to pass to the underlying troika-three-text instance
@@ -55,13 +49,11 @@ type TextareaProps = {
   padding?: Vector2;
 };
 
-type Props = TextareaProps & GroupProps;
-
-const Textarea = React.forwardRef(
-  (props: Props, ref: React.Ref<HTMLTextAreaElement>) => {
+const InputText = React.forwardRef(
+  (props: InputTextProps, ref: React.ForwardedRef<HTMLInputElement>) => {
     const {
       onChange,
-      rows = 4,
+      type = "text",
       label,
       name,
       textProps,
@@ -70,10 +62,15 @@ const Textarea = React.forwardRef(
       backgroundColor = "lightgrey",
       backgroundOpacity = 0.3,
       padding,
-      ...restProps
     } = props;
 
+    const [hovered, setHovered] = React.useState<boolean>(false);
+    useCursor(hovered, "text");
+
+    // handle text defaults
     const fontSize = textProps?.fontSize || 0.0825;
+    const fontColor = textProps?.color || "black";
+
     let _padding = React.useMemo(() => new Vector2Impl(0.02, 0.05), []);
 
     if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
@@ -81,38 +78,49 @@ const Textarea = React.forwardRef(
     } else {
       _padding.set(0.02, 0.05);
     }
+    const height = fontSize + _padding.y;
 
-    const height = rows * fontSize + _padding.y * 2;
-
+    // handle label defaults
+    const labelSize = labelProps?.fontSize || 0.07;
+    const labelColor = labelProps?.color || "black";
     return (
-      <group {...restProps}>
+      <>
         <group position={[-width / 2, height / 1.8, 0]}>
-          <Label {...labelProps}>{label}</Label>
+          <Label color={labelColor} fontSize={labelSize} {...labelProps}>
+            {label}
+          </Label>
         </group>
-
         <Text
           ref={ref}
           width={width}
-          name={name}
           padding={_padding}
           height={height}
           onChange={onChange}
+          type={type}
           fontSize={fontSize}
-          rows={rows}
+          color={fontColor}
+          name={name ?? label}
           {...textProps}
         />
 
-        <Container
-          width={width}
-          height={height}
-          backgroundColor={backgroundColor}
-          backgroundOpacity={backgroundOpacity}
-        />
-      </group>
+        <mesh
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          renderOrder={1}
+        >
+          <planeGeometry args={[width, height]} />
+          <meshBasicMaterial
+            color={backgroundColor}
+            transparent
+            opacity={backgroundOpacity}
+            depthWrite={false}
+          />
+        </mesh>
+      </>
     );
   }
 );
 
-Textarea.displayName = "Textarea";
+InputText.displayName = "InputText";
 
-export { Textarea };
+export { InputText };

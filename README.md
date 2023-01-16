@@ -1,4 +1,4 @@
-# r3f-input
+# r3f-form
 
 ### [View examples](https://jmberesford.github.io/r3f-input/?path=/story/input--text-input)
 
@@ -7,7 +7,7 @@
 > Each release will aim to be a fully functional and usable release,
 > but breaking API changes WILL be likely for the forseeable future.
 
-## A webGL input field component for use with React Three Fiber
+## A webGL form component for use with React Three Fiber
 
 ![image](https://user-images.githubusercontent.com/1373954/210024281-c735f61a-1a69-45e5-a5d3-147ed57a6c30.png)
 
@@ -15,34 +15,99 @@ This package aims to create a fully-functional and **accessible** `<Input />`
 component that can be used within the [@react-three/fiber](https://github.com/pmndrs/react-three-fiber)
 ecosystem. Ultimately, the goal is to have fully functioning HTML `<form>`s -- with all viable input types -- rendered in webGL.
 
-Current implementation of `<Input />` binds webGL elements to the existing state and event systems of a
-hidden HTML `<input>` element. There is a heavy reliance on
+Current implementation binds webGL elements to the existing state and event systems of respective
+hidden HTML DOM elements. There is a heavy reliance on
 [troika-three-text](https://github.com/protectwise/troika/tree/main/packages/troika-three-text)
 for text-rendering and selection/caret logic.
 
-> Note that `r3f-input` will only work within a React-Three-Fiber Canvas element.
+> Note that `r3f-form` will only work within a React-Three-Fiber Canvas element.
 > You **must** be using
 >
 > - [@react-three/fiber](https://github.com/pmndrs/react-three-fiber)
 > - [@react-three/drei](https://github.com/pmndrs/drei)
 > - [troika-three-text](https://github.com/protectwise/troika/tree/main/packages/troika-three-text)
 >
-> as dependencies in your project to use `r3f-input`.
+> as dependencies in your project to use `r3f-form`.
 
 ### Install
 
 ```sh
-npm install @jberesford/r3f-input
+npm install r3f-form
 # or, if using yarn
-yarn install @jberesford/r3f-input
+yarn install r3f-form
 ```
 
-## How to use
+# How to use
+
+## Forms
+
+In order to create a form, just wrap any relevant elements in a `<Form>`:
+
+```tsx
+import { Form, Input } from 'r3f-form';
+
+export function MyForm() {
+  return (
+    <Form>
+      <Input label="Username" name="username" />
+      <Input label="Password" name="password" type="password" />
+
+      <Input type="submit" value="Login" />
+    </Form>
+  )
+}
+```
+
+The relevant inputs will be bound to respective DOM elements under the hood, and be rendered into the 3D scene like so:
+![image](https://user-images.githubusercontent.com/1373954/212585376-295872dc-4da7-46d8-a2c8-3e2096a98923.png)
+
+You can define submission behavior just like with any old HTML `<form>`:
+
+```tsx
+// redirect to a login script
+<Form action="/login.php"></Form>
+
+// or handle it with a callback
+const handleSubmit = (e: FormEvent) => {
+  e.preventDefault();
+  
+  const data = new FormData(e.target);
+
+  . . .
+}
+
+<Form onSubmit={handleSubmit}></Form>
+```
+
+## Inputs
+
+### Text/Password
+
+```ts
+type InputTextProps = {
+  onChange?: (e: React.ChangeEvent) => void;
+  label?: string;
+  name?: string;
+  
+  /**
+   * Props to pass to the underlying troika-three-text instance
+   *
+   * Most -- but not all -- of the props for troika-three-text are supported:
+   * https://github.com/protectwise/troika/tree/master/packages/troika-3d-text
+   */
+  textProps?: TroikaTextProps;
+  labelProps?: TroikaTextProps; // Same as `textProps` -- but for the label
+  width?: number;
+  backgroundColor?: Color;
+  backgroundOpacity?: number;
+  padding?: Vector2; // [left/right , top/bottom] in THREE units, respectively
+};
+```
 
 Create a basic input field like so:
 
-```jsx
-import { Input } from "@jberesford/r3f-input";
+```tsx
+import { Input } from "r3f-form";
 
 export function App() {
   return (
@@ -62,8 +127,8 @@ You can access the value of the input via the `onChange` callback prop:
 >
 > Read more about this event [here](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event)
 
-```jsx
-import { Input } from "@jberesford/r3f-input";
+```tsx
+import { Input } from "r3f-form";
 
 export function App() {
   const [username, setUsername] = React.useState("");
@@ -83,8 +148,8 @@ export function App() {
 
 You can also create password inputs:
 
-```jsx
-import { Input } from "@jberesford/r3f-input";
+```tsx
+import { Input } from "r3f-form";
 
 export function App() {
   return (
@@ -99,8 +164,8 @@ export function App() {
 
 Add custom padding to the text container:
 
-```jsx
-import { Input } from "@jberesford/r3f-input";
+```tsx
+import { Input } from "r3f-form";
 
 /*
  * padding=[0.05, 0.5] -> 5% of width is used to pad left and right, 50% of height for top/bottom
@@ -119,8 +184,8 @@ export function App() {
 
 Change color and background opacity:
 
-```jsx
-import { Input } from "@jberesford/r3f-input";
+```tsx
+import { Input } from "r3f-form";
 
 /*
  * backgroundOpacity defaults to 0.1
@@ -145,12 +210,79 @@ export function App() {
 > NOTE: The `textProps` and `labelProps` props can take _almost_ all of the properties that are supported
 > by the underlying [troika-three-text](https://github.com/protectwise/troika/tree/main/packages/troika-three-text) mesh.
 
+### Submit
+
+```ts
+type SubmitProps = {
+  value?: string;
+  fontSize?: number;
+  width?: number;
+  height?: number;
+  color?: Color;
+  backgroundColor?: Color;
+  
+  // and any attributes that an HTML <input> takes
+};
+```
+
+Add a simple submit button to your forms like so:
+
+```tsx
+<Form>
+  <Input name="username" label="Username" />
+  <Input name="password" label="Password" type="password" />
+
+  <Input type="submit" value="Submit" />
+</Form>
+```
+![image](https://user-images.githubusercontent.com/1373954/212585376-295872dc-4da7-46d8-a2c8-3e2096a98923.png)
+
+While this provides a somewhat-customizable default button, the main purpose of this component
+is to provide a simple interface to use 3D elements to submit your forms. Any children passed in
+will submit the form on click. For example:
+
+```tsx
+<Form>
+  . . .
+
+  <Input type="submit">
+    <MySubmitButton />
+  </Input>
+</Form>
+```
+![image](https://user-images.githubusercontent.com/1373954/212590757-ef068ad0-bcb6-4db3-90e0-1bef3a279f9b.png)
+
+Clicking on the big red button would submit the `<Form>`
+
 ---
+## Textarea
+
+```ts
+type TextareaProps = {
+  onChange?: (e: React.ChangeEvent) => void; // e.target.value contains the textarea's value
+  rows?: number; // height of container in # of rows of text 
+  label?: string;
+  name?: string;
+
+  /**
+   * Props to pass to the underlying troika-three-text instance
+   *
+   * Most -- but not all -- of the props for troika-three-text are supported:
+   * https://github.com/protectwise/troika/tree/master/packages/troika-3d-text
+   */
+  textProps?: TroikaTextProps;
+  labelProps?: TroikaTextProps; // Same as `textProps` -- but for the label
+  width?: number; // width of the container in THREE units
+  backgroundColor?: Color;
+  backgroundOpacity?: number;
+  padding?: Vector2; // [left/right , top/bottom] in THREE units, respectively
+};
+```
 
 Similar to the `<Input />` component, you can also create a `<Textarea />` like so:
 
-```jsx
-import { Textarea } from "@jberesford/r3f-input";
+```tsx
+import { Textarea } from "r3f-form";
 
 export function App() {
   return (
