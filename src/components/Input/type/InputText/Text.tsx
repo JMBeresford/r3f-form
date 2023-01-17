@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { Html, Mask, Text as TextImpl, useMask } from "@react-three/drei";
+import { Mask, Text as TextImpl, useMask } from "@react-three/drei";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { damp } from "three/src/math/MathUtils";

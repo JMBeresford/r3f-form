@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
 import { TroikaTextProps } from "types";
-import { Html, Mask, Text as TextImpl, useMask } from "@react-three/drei";
+import { Mask, Text as TextImpl, useMask } from "@react-three/drei";
 import {
   getCaretAtPoint as getCaretAtPointBuiltIn,
   getSelectionRects,
@@ -15,7 +15,6 @@ import Container from "./Container";
 export type TextProps = {
   onChange?: (e: React.ChangeEvent) => void;
   width: number;
-  height: number;
   rows: number;
   name?: string;
   padding: Vector2;
@@ -41,7 +40,6 @@ const Text = React.forwardRef(
     const {
       onChange,
       width,
-      height,
       rows,
       name,
       padding,
@@ -125,6 +123,8 @@ const Text = React.forwardRef(
       () => getSelectionRects(renderInfo, selection[0], selection[1]),
       [renderInfo, selection]
     );
+
+    const height = rows * renderInfo?.lineHeight + padding.y * 2;
 
     // EVENTS
     const handleSync = (text: any) => {
@@ -344,24 +344,24 @@ const Text = React.forwardRef(
 
     return (
       <group>
-        <Mask
-          id={2}
-          onClick={handleClick}
-          onDoubleClick={handleDoubleClick}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          position-y={-(height - padding.y) / 2 + renderInfo?.lineHeight / 2}
-        >
-          <planeGeometry args={[width - padding.x, height - padding.y / 2]} />
-        </Mask>
+        <group position-y={-height / 2 + fontSize / 2 + padding.y}>
+          <Mask
+            id={2}
+            onClick={handleClick}
+            onDoubleClick={handleDoubleClick}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+          >
+            <planeGeometry args={[width - padding.x, height - padding.y]} />
+          </Mask>
 
-        <Container
-          position-y={-(height - padding.y) / 2 + renderInfo?.lineHeight / 2}
-          width={width}
-          height={height}
-          backgroundColor={backgroundColor}
-          backgroundOpacity={backgroundOpacity}
-        />
+          <Container
+            width={width}
+            height={height}
+            backgroundColor={backgroundColor}
+            backgroundOpacity={backgroundOpacity}
+          />
+        </group>
 
         <group ref={groupRef}>
           <group position={[-width / 2 + padding.x, 0, 0]}>

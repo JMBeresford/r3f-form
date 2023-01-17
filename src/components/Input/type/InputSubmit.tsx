@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { Html, Text, useCursor } from "@react-three/drei";
+import { Text, useCursor } from "@react-three/drei";
 import { Color, ThreeEvent, useThree } from "@react-three/fiber";
 import { useFormContext } from "../../Form";
 
@@ -117,8 +117,6 @@ const InputSubmit = React.forwardRef(
 
     return (
       <>
-        <Html portal={formNode}></Html>
-
         <group
           onClick={handleClick}
           onPointerOver={() => setHovered(true)}

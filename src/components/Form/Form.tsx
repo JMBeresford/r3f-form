@@ -36,7 +36,12 @@ const Form = React.forwardRef(
 
     React.useLayoutEffect(() => {
       root.current?.render(
-        <form ref={domRef} id="_r3f-input-form" {...restProps}></form>
+        <form
+          ref={domRef}
+          id="_r3f-input-form"
+          style={{ opacity: 0, pointerEvents: "none", touchAction: "none" }}
+          {...restProps}
+        ></form>
       );
     });
 

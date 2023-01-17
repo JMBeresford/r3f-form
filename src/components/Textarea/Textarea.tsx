@@ -75,12 +75,12 @@ const Textarea = React.forwardRef(
     } = props;
 
     const fontSize = textProps?.fontSize || 0.0825;
-    let _padding = React.useMemo(() => new Vector2Impl(0.02, 0.05), []);
+    let _padding = React.useMemo(() => new Vector2Impl(), []);
 
     if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
       _padding.set(padding[0], padding[1]);
     } else {
-      _padding.set(0.02, 0.05);
+      _padding.set(0.02, 0.02);
     }
 
     const height = rows * fontSize + _padding.y * 2;
@@ -96,7 +96,6 @@ const Textarea = React.forwardRef(
           width={width}
           name={name}
           padding={_padding}
-          height={height}
           onChange={onChange}
           fontSize={fontSize}
           rows={rows}
