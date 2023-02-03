@@ -3,9 +3,8 @@ import { storiesOf } from "@storybook/react";
 import "./index.css";
 import { Scene } from "./common";
 
-import { Form } from "../../src/components/Form";
-import { Input } from "../../src/components/Input";
-import { Textarea } from "../../src/components/Textarea";
+import { Form, Input, Textarea, Label, Submit } from "../../src/";
+
 import { Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { damp } from "three/src/math/MathUtils";
@@ -33,22 +32,23 @@ stories.add("Default Submit Button", () => {
 
   return (
     <Scene lightColor="blue">
-      <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-        <Input label="Username" name="username" />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          position-y={-0.325}
-        />
+      <group position-y={0.2}>
+        <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
+          <Label text="username" />
+          <Input name="username" />
 
-        <Input
-          type="submit"
-          position-y={-0.55}
-          value="Login"
-          backgroundColor="#AA99FF"
-        />
-      </Form>
+          <group position-y={-0.325}>
+            <Label text="password" />
+            <Input type="password" name="password" />
+          </group>
+
+          <Submit
+            position={[0, -0.55, 0]}
+            value="Login"
+            backgroundColor="#AA99FF"
+          />
+        </Form>
+      </group>
     </Scene>
   );
 });
@@ -85,8 +85,7 @@ const Btn = () => {
     >
       <Text
         color="#aa5566"
-        // renderOrder={5}
-        depthOffset={-0.1}
+        renderOrder={5}
         fontSize={0.185}
         font="fonts/Montserrat-Bold.ttf"
         rotation-x={-Math.PI / 2}
@@ -107,19 +106,21 @@ stories.add("Custom Submit Button", () => {
 
   return (
     <Scene lightColor="blue">
-      <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-        <Input label="Username" name="username" />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          position-y={-0.325}
-        />
+      <group position-z={-0.5}>
+        <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
+          <Label text="Username" />
+          <Input name="username" />
 
-        <Input type="submit" value="submit">
-          <Btn />
-        </Input>
-      </Form>
+          <group position-y={-0.325}>
+            <Label text="Password" />
+            <Input type="password" name="password" />
+          </group>
+
+          <Submit value="submit" position={[0, 0, -0.5]}>
+            <Btn />
+          </Submit>
+        </Form>
+      </group>
     </Scene>
   );
 });
@@ -129,15 +130,23 @@ stories.add("With Textarea", () => {
 
   return (
     <Scene lightColor="yellow">
-      <group position-y={0.5}>
+      <group position={[0, 0.45, -0.2]}>
         <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-          <Input label="First Name" name="fname" />
-          <Input label="Last Name" name="lname" position-y={-0.3} />
-          <Textarea label="Feedback" name="feedback" position-y={-0.8} />
+          <Label text="First Name" />
+          <Input name="fname" />
 
-          <Input
-            type="submit"
-            position-y={-1.2}
+          <group position-y={-0.3}>
+            <Label text="Last Name" />
+            <Input name="lname" />
+          </group>
+
+          <group position-y={-0.6}>
+            <Label text="Feedback" />
+            <Textarea name="feedback" />
+          </group>
+
+          <Submit
+            position={[0, -1.1, 0]}
             value="submit"
             backgroundColor="#DDFFAA"
           />

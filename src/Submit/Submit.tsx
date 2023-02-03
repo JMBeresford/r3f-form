@@ -13,7 +13,8 @@ type ButtonProps = {
   backgroundColor?: Color;
 };
 
-export type InputSubmitProps = ButtonProps &
+export type Props = ButtonProps &
+  Pick<JSX.IntrinsicElements["group"], "position" | "rotation" | "scale"> &
   Omit<JSX.IntrinsicElements["input"], "ref">;
 
 const Button = (props: ButtonProps) => {
@@ -48,8 +49,8 @@ const Button = (props: ButtonProps) => {
   );
 };
 
-const InputSubmit = React.forwardRef(
-  (props: InputSubmitProps, ref: React.ForwardedRef<HTMLInputElement>) => {
+const Submit = React.forwardRef(
+  (props: Props, ref: React.ForwardedRef<HTMLInputElement>) => {
     const {
       value,
       backgroundColor,
@@ -57,6 +58,9 @@ const InputSubmit = React.forwardRef(
       width,
       height,
       fontSize,
+      position,
+      rotation,
+      scale,
       ...restProps
     } = props;
 
@@ -121,6 +125,9 @@ const InputSubmit = React.forwardRef(
           onClick={handleClick}
           onPointerOver={() => setHovered(true)}
           onPointerLeave={() => setHovered(false)}
+          position={position}
+          rotation={rotation}
+          scale={scale}
         >
           {children ? children : <Button {...(props as ButtonProps)} />}
         </group>
@@ -129,6 +136,6 @@ const InputSubmit = React.forwardRef(
   }
 );
 
-InputSubmit.displayName = "InputSubmit";
+Submit.displayName = "InputSubmit";
 
-export { InputSubmit };
+export { Submit };
