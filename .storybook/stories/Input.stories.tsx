@@ -3,51 +3,81 @@ import { storiesOf } from "@storybook/react";
 import "./index.css";
 import { Scene } from "./common";
 
-import { Input } from "../../src/components/Input";
+import { Input, Label } from "../../src/";
+import { Text } from "../../src/Input";
 
 const stories = storiesOf("Input", module);
 
 stories.add("Text Input", () => (
   <Scene lightColor="blue">
-    <Input label="Text Input:" />
+    <Label text="Label" />
+    <Input />
   </Scene>
 ));
 
 stories.add("Password Input", () => (
   <Scene lightColor="orange">
-    <Input position-y={0.1} label="Username:" />
-    <Input position-y={-0.2} type="password" label="Password:" />
+    <Label text="Password" />
+    <Input type="password" />
   </Scene>
 ));
 
 stories.add("Custom Padding", () => (
   <Scene lightColor="yellow">
-    <Input padding={[0.1, 0.1]} label="Label:" />
+    <Label position={[0, 0.1, 0]} text="Label" />
+    <Input padding={[0.1, 0.1]} />
   </Scene>
 ));
 
 stories.add("Custom Color/Opacity", () => (
   <Scene>
-    <Input
-      backgroundOpacity={0.6}
-      backgroundColor="black"
-      textProps={{ color: "#cfcfff" }}
-      label="Test Color/Opacity"
-    />
+    <Label text="Custom Color/Opacity" />
+    <Input backgroundOpacity={0.6} backgroundColor="black">
+      <Text color="red" />
+    </Input>
   </Scene>
 ));
 
 stories.add("Adjustable Width", () => (
   <Scene lightColor="white">
-    <Input position={[-0.75 / 2, 0.1, 0]} width={1} label="Smol:" />
+    <group position={[-0.75 / 2, 0.1, 0]}>
+      <Label text="Smol" />
+      <Input width={1} />
+    </group>
 
-    <Input position={[0, -0.2, 0]} width={1.75} label="Grande:" />
+    <group position={[0, -0.2, 0]}>
+      <Label text="Grande" />
+      <Input width={1.75} />
+    </group>
+  </Scene>
+));
+
+stories.add("Initial Value", () => (
+  <Scene>
+    <Label text="Initial Value" />
+    <Input defaultValue="Some placeholder text" />
+  </Scene>
+));
+
+stories.add("Custom Font", () => (
+  <Scene lightColor="red">
+    <Label text="Custom Font" font="fonts/MajorMonoDisplay.ttf" />
+    <Input>
+      <Text font="fonts/PlayfairDisplay-Regular.ttf" />
+    </Input>
   </Scene>
 ));
 
 stories.add("Custom Cursor Width", () => (
-  <Scene lightColor="orange">
-    <Input position-y={0.1} width={1.75} label="Regular:" />
-    <Input position-y={-0.2} width={1.75} label="Larger:" cursorWidth={0.05} />
+  <Scene lightColor="grey">
+    <group position-y={0.1}>
+      <Label text="Regular" />
+      <Input width={1.75} />
+    </group>
+
+    <group position-y={-0.2}>
+      <Label text="Larger" />
+      <Input width={1.75} cursorWidth={0.035} />
+    </group>
   </Scene>
 ));

@@ -1,12 +1,17 @@
 import * as React from "react";
-import { Canvas, Color, useFrame } from "@react-three/fiber";
+import { Canvas, Color, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
   Environment,
   Float,
   OrbitControls,
 } from "@react-three/drei";
-import { randFloat, randInt, seededRandom } from "three/src/math/MathUtils";
+import {
+  damp,
+  randFloat,
+  randInt,
+  seededRandom,
+} from "three/src/math/MathUtils";
 import { Group } from "three";
 
 const Shapes = () => {
@@ -60,15 +65,28 @@ const Shapes = () => {
   );
 };
 
+const Rig = () => {
+  const camera = useThree((s) => s.camera);
+
+  useFrame(({ mouse }, delta) => {
+    let x = mouse.x * 0.1;
+    let y = mouse.y * 0.1;
+
+    camera.rotation.x = damp(camera.rotation.x, y, 12, delta);
+    camera.rotation.y = damp(camera.rotation.y, -x, 12, delta);
+  });
+  return <></>;
+};
+
 const Scene = ({ lightColor = "red", children }) => (
-  <Canvas dpr={[1, 2]} camera={{ position: [-0.7, 0.7, 2.5], fov: 65 }}>
+  <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 1.125], fov: 65 }}>
     <Environment background preset="sunset" blur={0.85} />
     <hemisphereLight args={["#ffffff", lightColor]} />
-    <ContactShadows position-y={-1} opacity={0.85} blur={1} />
+    {/* <ContactShadows position-y={-1} opacity={0.85} blur={1} /> */}
     <Shapes />
 
     {children}
-    <OrbitControls />
+    <Rig />
   </Canvas>
 );
 

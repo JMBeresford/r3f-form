@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Text, useCursor } from "@react-three/drei";
 import { Color, ThreeEvent, useThree } from "@react-three/fiber";
-import { useFormContext } from "../../Form";
+import { useFormContext } from "../Form";
 
 type ButtonProps = {
   value?: string;

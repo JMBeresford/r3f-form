@@ -1,43 +1,76 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { Mask, Text as TextImpl, useMask } from "@react-three/drei";
-import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
-import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
-import { damp } from "three/src/math/MathUtils";
-import { TroikaTextProps } from "types";
+import {
+  Color,
+  ThreeEvent,
+  Vector2,
+  useFrame,
+  useThree,
+} from "@react-three/fiber";
+import {
+  BufferGeometry,
+  Group,
+  Material,
+  Mesh,
+  Vector2 as Vector2Impl,
+} from "three";
+import { Mask, useCursor, useMask } from "@react-three/drei";
+import { Text } from "./Text";
+import { useFormContext } from "../Form";
 import { getCaretAtPoint } from "troika-three-text";
-import { useFormContext } from "../../../Form";
+import { damp } from "three/src/math/MathUtils";
 
-export type TextProps = {
-  onChange?: (e: React.ChangeEvent) => void;
-  width: number;
-  height: number;
-  padding: Vector2;
-  type: "text" | "password";
-  name?: string;
+type Props = {
+  type?: "text" | "password";
+
+  /** width of the container */
+  width?: number;
+  backgroundColor?: Color;
+  selectionColor?: Color;
+  backgroundOpacity?: number;
+
+  /** [left/right , top/bottom] in THREE units, respectively
+   *
+   * note that height is implicitly defined by the capHeight of the rendered
+   * text. The cap height is dependant on both the `textProps.font` being used and the
+   * `textProps.fontSize` value
+   */
+  padding?: Vector2;
   cursorWidth?: number;
-} & TroikaTextProps;
+} & Pick<JSX.IntrinsicElements["group"], "position" | "rotation" | "scale"> &
+  Omit<JSX.IntrinsicElements["input"], "type" | "ref">;
 
-const Text = React.forwardRef(
-  (props: TextProps, ref: React.MutableRefObject<HTMLInputElement>) => {
+/**
+ * An Input field that is rendered in the canvas and bound
+ * to a hidden HTML <\input\> element.
+ */
+const Input = React.forwardRef(
+  (props: Props, ref: React.MutableRefObject<HTMLInputElement>) => {
     const {
-      fontSize,
-      font,
-      color,
+      type = "text",
+      position,
+      rotation,
+      scale,
+      width = 1.5,
+      backgroundColor = "lightgrey",
+      selectionColor = "#7777ff",
+      backgroundOpacity = 0.3,
       padding,
-      width,
-      height,
-      type,
-      onChange,
-      name,
       cursorWidth = 0.005,
+      children,
+      onChange,
+      onFocus,
+      onBlur,
+      onSelect,
       ...restProps
     } = props;
-    const localRef = React.useRef<HTMLInputElement>();
+
+    // REFS etc
+    const localRef = React.useRef<HTMLInputElement>(null);
     const domRef = ref || localRef;
-    const textRef = React.useRef<Mesh<BufferGeometry, Material>>();
-    const groupRef = React.useRef<Group>();
-    const caretRef = React.useRef<Mesh<BufferGeometry, Material>>();
+    const textRef = React.useRef<Mesh<BufferGeometry, Material>>(null);
+    const groupRef = React.useRef<Group>(null);
+    const caretRef = React.useRef<Mesh<BufferGeometry, Material>>(null);
     const stencil = useMask(1);
     const events = useThree((s) => s.events);
     const gl = useThree((s) => s.gl);
@@ -52,11 +85,29 @@ const Text = React.forwardRef(
     const time = React.useRef<number>(0);
     const [domEl] = React.useState(() => document.createElement("div"));
     const [active, setActive] = React.useState<boolean>(false);
-    const [content, setContent] = React.useState<string>("");
+    const [content, setContent] = React.useState<string>(
+      (props.defaultValue as string) ?? ""
+    );
     const [caret, setCaret] = React.useState<number>(0);
     const [selection, setSelection] = React.useState<[number, number]>([0, 0]);
     const [renderInfo, setRenderInfo] = React.useState(null);
+    const [hovered, setHovered] = React.useState<boolean>(false);
 
+    let _padding = React.useMemo(() => new Vector2Impl(), []);
+    if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
+      _padding.set(padding[0], padding[1]);
+    } else {
+      _padding.set(0.02, 0.02);
+    }
+
+    const fontSize = React.useMemo(() => {
+      if (renderInfo) {
+        return renderInfo.parameters.fontSize;
+      }
+      return 0;
+    }, [renderInfo]);
+
+    const height = fontSize + _padding.y * 2;
     const caretPositions: number[] = React.useMemo(() => {
       if (!renderInfo?.caretPositions) return [0];
 
@@ -80,19 +131,29 @@ const Text = React.forwardRef(
     }, [caret, caretPositions, content]);
 
     // EVENTS
+    useCursor(hovered, "text");
+
     const handleSync = (text: { textRenderInfo: object }) => {
       if (text) setRenderInfo(text.textRenderInfo);
     };
 
-    const handleFocus = (e: React.FocusEvent) => {
-      e.nativeEvent.preventDefault();
-      setActive(true);
-    };
+    const handleFocus = React.useCallback(
+      (e: React.FocusEvent<HTMLInputElement>) => {
+        e.nativeEvent.preventDefault();
+        setActive(true);
+        onFocus && onFocus(e);
+      },
+      [onFocus]
+    );
 
-    const handleBlur = () => {
-      setSelection([0, 0]);
-      setActive(false);
-    };
+    const handleBlur = React.useCallback(
+      (e: React.FocusEvent<HTMLInputElement>) => {
+        setSelection([0, 0]);
+        setActive(false);
+        onBlur && onBlur(e);
+      },
+      [onBlur]
+    );
 
     const handleSelect = React.useCallback(
       (e: React.SyntheticEvent<HTMLInputElement, Event>) => {
@@ -108,8 +169,10 @@ const Text = React.forwardRef(
           setSelection([selectionStart, selectionEnd]);
           time.current = clock.elapsedTime;
         }
+
+        onSelect && onSelect(e);
       },
-      [clock]
+      [clock, onSelect]
     );
 
     const handleChange = React.useCallback(
@@ -228,11 +291,11 @@ const Text = React.forwardRef(
       root.current?.render(
         <input
           ref={domRef}
+          {...restProps}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
           onSelect={handleSelect}
-          name={name}
           style={{
             position: "absolute",
             left: "-1000vw",
@@ -248,7 +311,7 @@ const Text = React.forwardRef(
 
     React.useEffect(() => {
       let pos: number;
-      const innerWidth = width - padding.x * 2;
+      const innerWidth = width - _padding.x * 2;
       const [selectionStart, selectionEnd] = [
         caretPositions[selection[0]] + groupRef.current.position.x,
         caretPositions[selection[1]] + groupRef.current.position.x,
@@ -280,7 +343,30 @@ const Text = React.forwardRef(
         const dx = left - pos;
         groupRef.current.position.x += dx;
       }
-    }, [width, padding, caret, caretPositions, selection, domRef]);
+    }, [_padding, width, padding, caret, caretPositions, selection, domRef]);
+
+    // BLACK MAGIC
+    const CustomText: React.ReactElement = React.useMemo(() => {
+      let customText = null;
+      React.Children.toArray(children).forEach((child: React.ReactElement) => {
+        if (child.type === Text) {
+          customText = React.cloneElement(child, {
+            ref: textRef,
+            onSync: handleSync,
+            text: type === "password" ? "•".repeat(content.length) : content,
+          });
+        }
+      });
+
+      return customText;
+    }, [children, type, content]);
+
+    const color = React.useMemo(() => {
+      if (CustomText && CustomText.props.color) {
+        return CustomText.props.color;
+      }
+      return "black";
+    }, [CustomText]);
 
     useFrame((_, delta) => {
       if (!caretRef.current) return;
@@ -297,7 +383,7 @@ const Text = React.forwardRef(
     });
 
     return (
-      <group>
+      <group position={position} rotation={rotation} scale={scale}>
         <Mask
           id={1}
           onClick={handleClick}
@@ -305,36 +391,28 @@ const Text = React.forwardRef(
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
         >
-          <planeGeometry args={[width - padding.x, height]} />
+          <planeGeometry args={[width - _padding.x, height]} />
         </Mask>
 
-        <group position={[-width / 2 + padding.x, 0, 0]}>
+        <group position={[-width / 2 + _padding.x, 0, 0]}>
           <group ref={groupRef}>
-            <React.Suspense fallback={null}>
-              <TextImpl
-                ref={textRef}
-                renderOrder={3}
-                onSync={handleSync}
-                fontSize={fontSize}
-                font={font}
-                anchorX="left"
-                anchorY="top-baseline"
-                whiteSpace="nowrap"
-                letterSpacing={type === "password" ? 0.1 : 0}
-                depthOffset={0.5}
-                position={[0, -renderInfo?.capHeight / 2, 0]}
-                {...restProps}
-              >
-                {type === "password" ? "•".repeat(content.length) : content}
-                <meshBasicMaterial
+            <group
+              renderOrder={3}
+              position={[0, -renderInfo?.capHeight / 2, 0]}
+            >
+              {CustomText !== null ? (
+                CustomText
+              ) : (
+                <Text
+                  ref={textRef}
+                  onSync={handleSync}
                   color={color}
-                  transparent
-                  toneMapped={false}
-                  depthWrite={false}
-                  {...stencil}
+                  text={
+                    type === "password" ? "•".repeat(content.length) : content
+                  }
                 />
-              </TextImpl>
-            </React.Suspense>
+              )}
+            </group>
 
             <group position-x={cursorWidth / 2}>
               <mesh
@@ -342,9 +420,9 @@ const Text = React.forwardRef(
                 position={[caretPosition, 0, 0]}
                 visible={active && caret !== null}
                 renderOrder={3}
-                scale-x={cursorWidth}
+                scale={[cursorWidth, fontSize, 1]}
               >
-                <planeGeometry args={[1, fontSize]} />
+                <planeGeometry args={[1, 1]} />
                 <meshBasicMaterial
                   color={color}
                   transparent
@@ -370,7 +448,7 @@ const Text = React.forwardRef(
               >
                 <planeGeometry args={[1, fontSize]} />
                 <meshBasicMaterial
-                  color="#7777ff"
+                  color={selectionColor}
                   transparent
                   toneMapped={false}
                   opacity={1}
@@ -381,11 +459,25 @@ const Text = React.forwardRef(
             </group>
           </group>
         </group>
+
+        <mesh
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          renderOrder={1}
+        >
+          <planeGeometry args={[width, height]} />
+          <meshBasicMaterial
+            color={backgroundColor}
+            transparent
+            opacity={backgroundOpacity}
+            depthWrite={false}
+          />
+        </mesh>
       </group>
     );
   }
 );
 
-Text.displayName = "Text";
+Input.displayName = "Input";
 
-export default Text;
+export { Input };
