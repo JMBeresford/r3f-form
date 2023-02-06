@@ -42,19 +42,23 @@ yarn install r3f-form
 ## Forms
 
 In order to create a form, just wrap any relevant elements in a `<Form>`:
+#TODO: Update image of form with correct form layout and information (Submit value)
 
 ```tsx
-import { Form, Input } from 'r3f-form';
+import { Form, Input, Label, Submit } from "r3f-form";
 
 export function MyForm() {
   return (
     <Form>
-      <Input label="Username" name="username" />
-      <Input label="Password" name="password" type="password" />
+      <Label text="Username" />
+      <Input name="username" />
 
-      <Input type="submit" value="Login" />
+      <Label text="Password" />
+      <Input name="password" type="password" />
+
+      <Submit value="Login" />
     </Form>
-  )
+  );
 }
 ```
 
@@ -70,7 +74,7 @@ You can define submission behavior just like with any old HTML `<form>`:
 // or handle it with a callback
 const handleSubmit = (e: FormEvent) => {
   e.preventDefault();
-  
+
   const data = new FormData(e.target);
 
   . . .
@@ -83,12 +87,14 @@ const handleSubmit = (e: FormEvent) => {
 
 ### Text/Password
 
+#TODO: Update the prop list (Also remove troika props)?
+
 ```ts
 type InputTextProps = {
   onChange?: (e: React.ChangeEvent) => void;
   label?: string;
   name?: string;
-  
+
   /**
    * Props to pass to the underlying troika-three-text instance
    *
@@ -107,12 +113,13 @@ type InputTextProps = {
 Create a basic input field like so:
 
 ```tsx
-import { Input } from "r3f-form";
+import { Input, Label } from "r3f-form";
 
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Input label="Test Input" />
+      <Label text="Test Input" />
+      <Input />
     </Canvas>
   );
 }
@@ -128,7 +135,7 @@ You can access the value of the input via the `onChange` callback prop:
 > Read more about this event [here](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event)
 
 ```tsx
-import { Input } from "r3f-form";
+import { Input, Label } from "r3f-form";
 
 export function App() {
   const [username, setUsername] = React.useState("");
@@ -137,10 +144,8 @@ export function App() {
 
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Input
-        label="Test Input"
-        onChange={(ev) => setUsername(ev.target.value)}
-      />
+      <Label text="Test Input" />
+      <Input onChange={(ev) => setUsername(ev.target.value)} />
     </Canvas>
   );
 }
@@ -149,12 +154,13 @@ export function App() {
 You can also create password inputs:
 
 ```tsx
-import { Input } from "r3f-form";
+import { Input, Label } from "r3f-form";
 
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Input label="Test Password" type="password" />
+      <Label text="Test Password" />
+      <Input type="password" />
     </Canvas>
   );
 }
@@ -165,7 +171,7 @@ export function App() {
 Add custom padding to the text container:
 
 ```tsx
-import { Input } from "r3f-form";
+import { Input, Label } from "r3f-form";
 
 /*
  * padding=[0.05, 0.5] -> 5% of width is used to pad left and right, 50% of height for top/bottom
@@ -174,7 +180,8 @@ import { Input } from "r3f-form";
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Input label="Test Password" padding={[0.05, 0.5]} />
+      <Label text="Test Padding" />
+      <Input padding={[0.05, 0.5]} />
     </Canvas>
   );
 }
@@ -185,7 +192,8 @@ export function App() {
 Change color and background opacity:
 
 ```tsx
-import { Input } from "r3f-form";
+import { Input, Label } from "r3f-form";
+import { Text } from "r3f-form/Input";
 
 /*
  * backgroundOpacity defaults to 0.1
@@ -194,23 +202,24 @@ import { Input } from "r3f-form";
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Input
-        label="Test Color/Opacity"
-        backgroundOpacity={0.6}
-        backgroundColor="black"
-        textProps={{ color: "#cfcfff" }}
-      />
+      <Label text="Test Color/Opacity" />
+      <Input backgroundOpacity={0.6} backgroundColor="black">
+        <Text color="#cfcfff" />
+      </Input>
     </Canvas>
   );
 }
 ```
 
 ![image](https://user-images.githubusercontent.com/1373954/210023633-448bcb2b-aff7-4108-b3c2-ccc5514fe59f.png)
+#TODO: Remove this bit about the underlying troika props?
 
 > NOTE: The `textProps` and `labelProps` props can take _almost_ all of the properties that are supported
 > by the underlying [troika-three-text](https://github.com/protectwise/troika/tree/main/packages/troika-three-text) mesh.
 
 ### Submit
+
+#TODO: Update the prop list?
 
 ```ts
 type SubmitProps = {
@@ -220,21 +229,26 @@ type SubmitProps = {
   height?: number;
   color?: Color;
   backgroundColor?: Color;
-  
+
   // and any attributes that an HTML <input> takes
 };
 ```
 
 Add a simple submit button to your forms like so:
+#TODO: Update image of form with correct form layout and information (Submit value)
 
 ```tsx
 <Form>
-  <Input name="username" label="Username" />
-  <Input name="password" label="Password" type="password" />
+  <Label text="Username" />
+  <Input name="username" />
 
-  <Input type="submit" value="Submit" />
+  <Label text="Password" />
+  <Input name="password" type="password" />
+
+  <Submit value="Submit" />
 </Form>
 ```
+
 ![image](https://user-images.githubusercontent.com/1373954/212585376-295872dc-4da7-46d8-a2c8-3e2096a98923.png)
 
 While this provides a somewhat-customizable default button, the main purpose of this component
@@ -244,23 +258,26 @@ will submit the form on click. For example:
 ```tsx
 <Form>
   . . .
-
-  <Input type="submit">
+  <Submit value="submit">
     <MySubmitButton />
-  </Input>
+  </Submit>
 </Form>
 ```
+
 ![image](https://user-images.githubusercontent.com/1373954/212590757-ef068ad0-bcb6-4db3-90e0-1bef3a279f9b.png)
 
 Clicking on the big red button would submit the `<Form>`
 
 ---
+
 ## Textarea
+
+#TODO: Update the prop list (Also remove troika props)?
 
 ```ts
 type TextareaProps = {
   onChange?: (e: React.ChangeEvent) => void; // e.target.value contains the textarea's value
-  rows?: number; // height of container in # of rows of text 
+  rows?: number; // height of container in # of rows of text
   label?: string;
   name?: string;
 
@@ -282,12 +299,13 @@ type TextareaProps = {
 Similar to the `<Input />` component, you can also create a `<Textarea />` like so:
 
 ```tsx
-import { Textarea } from "r3f-form";
+import { Textarea, Label } from "r3f-form";
 
 export function App() {
   return (
     <Canvas camera={{ position: [0, 0, 1] }}>
-      <Textarea label="Default Textarea:" />
+      <Label text="Default Textarea:" />
+      <Textarea />
     </Canvas>
   );
 }
