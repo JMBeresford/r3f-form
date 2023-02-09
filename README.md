@@ -49,10 +49,10 @@ import { Form, Input, Label, Submit } from "r3f-form";
 export function MyForm() {
   return (
     <Form>
-      <Label text="Username" />
+      <Label text="username" />
       <Input name="username" />
 
-      <Label text="Password" />
+      <Label text="password" />
       <Input name="password" type="password" />
 
       <Submit value="Login" />
@@ -65,7 +65,7 @@ export function MyForm() {
 
 The relevant inputs will be bound to respective DOM elements under the hood, and be rendered into the 3D scene like so:
 
-![image](https://user-images.githubusercontent.com/1373954/212585376-295872dc-4da7-46d8-a2c8-3e2096a98923.png)
+![image](https://user-images.githubusercontent.com/1373954/217718779-816da536-00af-4375-85dd-de707e79aa8d.png)
 
 You can define submission behavior just like with any old HTML `<form>`:
 
@@ -127,14 +127,14 @@ import { Input, Label } from "r3f-form";
 export function MyInput() {
   return (
     <>
-      <Label text="Test Input" />
+      <Label text="label" />
       <Input />
     </>
   );
 }
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/210022351-c5675ed3-bcf4-4b2c-bcf1-1963a0c030b7.png)
+![image](https://user-images.githubusercontent.com/1373954/217718847-acb169ed-95ff-4def-a126-491c648346b9.png)
 
 You can access the value of the input via the `onChange` callback prop:
 
@@ -171,14 +171,14 @@ import { Input, Label } from "r3f-form";
 export function MyPassword() {
   return (
     <>
-      <Label text="Test Password" />
+      <Label text="Password" />
       <Input type="password" />
     </>
   );
 }
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/210022360-63ba745e-f4fa-49bc-b23d-623429c17809.png)
+![image](https://user-images.githubusercontent.com/1373954/217718412-48158e10-53b2-4e79-86c9-54bc5495521a.png)
 
 Add custom padding to the text container:
 
@@ -192,14 +192,14 @@ import { Input, Label } from "r3f-form";
 export function MyInput() {
   return (
     <>
-      <Label text="Test Padding" />
+      <Label text="Label" />
       <Input padding={[0.05, 0.5]} />
     </>
   );
 }
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/210022684-93ebfa22-a93f-46e3-bdc6-44451a22578d.png)
+![image](https://user-images.githubusercontent.com/1373954/217718475-1c696ff1-3b1d-4559-9d02-9535bd59cdff.png)
 
 ---
 
@@ -247,7 +247,7 @@ export function App() {
 }
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/210699887-e0a5c165-d58b-4755-ae79-761d4ecf7f4e.png)
+![image](https://user-images.githubusercontent.com/1373954/217718566-a718eab7-1e73-4559-96aa-8e14824f0031.png)
 
 ---
 
@@ -276,14 +276,14 @@ export function App() {
     <>
       <Label text="Test Color/Opacity" />
       <Input backgroundOpacity={0.6} backgroundColor="black">
-        <Text color="#cfcfff" />
+        <Text color="red" />
       </Input>
     </>
   );
 }
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/210023633-448bcb2b-aff7-4108-b3c2-ccc5514fe59f.png)
+![image](https://user-images.githubusercontent.com/1373954/217718611-c2e4848e-8267-4926-9243-7bb61bced61d.png)
 
 If you wanted to alter both an `<Input />` and a
 `<Textarea />` via their respective `<Text />` components
@@ -347,11 +347,11 @@ Add a simple submit button to your forms like so:
   <Label text="Password" />
   <Input name="password" type="password" />
 
-  <Submit value="Submit" />
+  <Submit value="Login" />
 </Form>
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/212585376-295872dc-4da7-46d8-a2c8-3e2096a98923.png)
+![image](https://user-images.githubusercontent.com/1373954/217718665-c64f6653-f85f-4310-a1c7-f2cf43154f2e.png)
 
 While this provides a somewhat-customizable default button, the main purpose of this component
 is to provide a simple interface to use 3D elements to submit your forms. Any children passed in
@@ -366,6 +366,6 @@ will submit the form on click. For example:
 </Form>
 ```
 
-![image](https://user-images.githubusercontent.com/1373954/212590757-ef068ad0-bcb6-4db3-90e0-1bef3a279f9b.png)
+![image](https://user-images.githubusercontent.com/1373954/217718713-a0a6671f-3f1e-4817-9ee9-e205bcc22610.png)
 
 Clicking on the big red button would submit the `<Form>`
