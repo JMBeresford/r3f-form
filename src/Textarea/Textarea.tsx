@@ -1,27 +1,47 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { BufferGeometry, Group, Material, Mesh, Vector2 } from "three";
-import { TroikaTextProps } from "types";
-import { Mask, Text as TextImpl, useMask } from "@react-three/drei";
+import {
+  BufferGeometry,
+  Group,
+  Material,
+  Mesh,
+  Vector2 as Vector2Impl,
+} from "three";
+import {
+  Color,
+  ThreeEvent,
+  Vector2,
+  useFrame,
+  useThree,
+} from "@react-three/fiber";
 import {
   getCaretAtPoint as getCaretAtPointBuiltIn,
   getSelectionRects,
 } from "troika-three-text";
-import { Color, ThreeEvent, useFrame, useThree } from "@react-three/fiber";
-import { damp } from "three/src/math/MathUtils";
+import { Text } from "./Text";
 import { useFormContext } from "../Form";
+import { Mask, useMask } from "@react-three/drei";
+import { damp } from "three/src/math/MathUtils";
 import Container from "./Container";
 
-export type TextProps = {
-  onChange?: (e: React.ChangeEvent) => void;
-  width: number;
-  rows: number;
-  name?: string;
-  padding: Vector2;
-  cursorWidth?: number;
+type Props = {
+  /** width of the container */
+  width?: number;
+
   backgroundColor?: Color;
   backgroundOpacity?: number;
-} & TroikaTextProps;
+  selectionColor?: Color;
+
+  /** [left/right , top/bottom] in THREE units, respectively
+   *
+   * note that height is implicitly defined by the capHeight of the rendered
+   * text. The cap height is dependant on both the `textProps.font` being used and the
+   * `textProps.fontSize` value
+   */
+  padding?: Vector2;
+  cursorWidth?: number;
+} & Pick<JSX.IntrinsicElements["group"], "position" | "rotation" | "scale"> &
+  Omit<JSX.IntrinsicElements["textarea"], "ref">;
 
 type SelectionRect = {
   bottom: number;
@@ -35,22 +55,28 @@ type CaretPosition = {
   y: number;
 };
 
-const Text = React.forwardRef(
-  (props: TextProps, ref: React.RefObject<HTMLTextAreaElement>) => {
+const Textarea = React.forwardRef(
+  (props: Props, ref: React.MutableRefObject<HTMLTextAreaElement>) => {
     const {
-      onChange,
-      width,
-      rows,
-      name,
+      position,
+      rows = 4,
+      rotation,
+      scale,
+      width = 1.5,
+      backgroundColor = "lightgrey",
+      selectionColor = "#7777ff",
+      backgroundOpacity = 0.3,
       padding,
-      fontSize,
       cursorWidth = 0.005,
-      color = "black",
-      backgroundColor,
-      backgroundOpacity,
+      children,
+      onChange,
+      onFocus,
+      onBlur,
+      onSelect,
       ...restProps
     } = props;
 
+    // REFS etc
     const localRef = React.useRef<HTMLTextAreaElement>();
     const domRef = ref || localRef;
     const groupRef = React.useRef<Group>();
@@ -75,6 +101,21 @@ const Text = React.forwardRef(
     const [font, setFont] = React.useState<FontFace>(null);
     const [selection, setSelection] = React.useState<[number, number]>([0, 0]);
     const [domEl] = React.useState(() => document.createElement("div"));
+    const [tempForm] = React.useState(() => document.createElement("form"));
+    let _padding = React.useMemo(() => new Vector2Impl(), []);
+
+    const fontSize = React.useMemo(() => {
+      if (renderInfo) {
+        return renderInfo.parameters.fontSize;
+      }
+      return 0;
+    }, [renderInfo]);
+
+    if (padding && (Array.isArray(padding) || ArrayBuffer.isView(padding))) {
+      _padding.set(padding[0], padding[1]);
+    } else {
+      _padding.set(0.02, 0.02);
+    }
 
     const caretPositions: CaretPosition[] = React.useMemo(() => {
       if (!renderInfo?.caretPositions) return [{ x: 0, y: 0 }];
@@ -124,7 +165,7 @@ const Text = React.forwardRef(
       [renderInfo, selection]
     );
 
-    const height = rows * renderInfo?.lineHeight + padding.y * 2;
+    const height = rows * renderInfo?.lineHeight + _padding.y * 2;
 
     // EVENTS
     const handleSync = (text: any) => {
@@ -133,15 +174,23 @@ const Text = React.forwardRef(
       setRenderInfo(text.textRenderInfo);
     };
 
-    const handleFocus = (e: React.FocusEvent) => {
-      e.preventDefault();
-      setActive(true);
-    };
+    const handleFocus = React.useCallback(
+      (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        e.preventDefault();
+        setActive(true);
+        onFocus && onFocus(e);
+      },
+      [onFocus]
+    );
 
-    const handleBlur = () => {
-      setSelection([0, 0]);
-      setActive(false);
-    };
+    const handleBlur = React.useCallback(
+      (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        setSelection([0, 0]);
+        setActive(false);
+        onBlur && onBlur(e);
+      },
+      [onBlur]
+    );
 
     const handleChange = React.useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -169,8 +218,10 @@ const Text = React.forwardRef(
           setSelection([selectionStart, selectionEnd]);
           time.current = clock.elapsedTime;
         }
+
+        onSelect && onSelect(e);
       },
-      [clock]
+      [clock, onSelect]
     );
 
     const handleClick = React.useCallback(
@@ -282,21 +333,22 @@ const Text = React.forwardRef(
     React.useLayoutEffect(() => {
       root.current?.render(
         <textarea
+          {...restProps}
           ref={domRef}
           rows={rows}
-          name={name}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
           onSelect={handleSelect}
+          wrap="hard"
           style={{
             position: "absolute",
-            left: "-1000vw",
             touchAction: "none",
             pointerEvents: "none",
             fontFamily: "r3f-input",
-            fontSize: `${fontSize * 100}px`,
-            width: `${(width - padding.x * 2) * 100}px`,
+            fontSize: `${fontSize * 500}px`,
+            width: `${(width - _padding.x * 2) * 500}px`,
+            left: "-1000vw",
             opacity: 0,
           }}
         />
@@ -317,7 +369,7 @@ const Text = React.forwardRef(
 
       let pos = caretPosition.y + groupRef.current.position.y;
       let top = 0;
-      let bottom = -(height - fontSize / 2) + padding.y * 2;
+      let bottom = -(height - renderInfo?.lineHeight) + _padding.y * 2;
 
       if (pos > top) {
         let dy = pos - top;
@@ -326,7 +378,31 @@ const Text = React.forwardRef(
         let dy = bottom - pos;
         groupRef.current.position.y += dy;
       }
-    }, [caretPosition, padding, height, fontSize]);
+    }, [caretPosition, _padding, height, renderInfo]);
+
+    // BLACK MAGIC
+    const CustomText: React.ReactElement = React.useMemo(() => {
+      let customText = null;
+      React.Children.toArray(children).forEach((child: React.ReactElement) => {
+        if (child.type === Text) {
+          customText = React.cloneElement(child, {
+            ref: textRef,
+            onSync: handleSync,
+            text: content,
+            maxWidth: width - _padding.x * 2,
+          });
+        }
+      });
+
+      return customText;
+    }, [children, content, width, _padding]);
+
+    const color = React.useMemo(() => {
+      if (CustomText && CustomText.props.color) {
+        return CustomText.props.color;
+      }
+      return "black";
+    }, [CustomText]);
 
     useFrame((_, delta) => {
       if (!caretRef.current) return;
@@ -343,8 +419,8 @@ const Text = React.forwardRef(
     });
 
     return (
-      <group>
-        <group position-y={-height / 2 + fontSize / 2 + padding.y}>
+      <group position={position} rotation={rotation} scale={scale}>
+        <group position-y={-height / 2 + fontSize / 2 + _padding.y}>
           <Mask
             id={2}
             onClick={handleClick}
@@ -352,7 +428,7 @@ const Text = React.forwardRef(
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
           >
-            <planeGeometry args={[width - padding.x, height - padding.y]} />
+            <planeGeometry args={[width - _padding.x, height - _padding.y]} />
           </Mask>
 
           <Container
@@ -364,28 +440,23 @@ const Text = React.forwardRef(
         </group>
 
         <group ref={groupRef}>
-          <group position={[-width / 2 + padding.x, 0, 0]}>
-            <TextImpl
-              ref={textRef}
-              fontSize={fontSize}
-              maxWidth={width - padding.x * 2}
+          <group position={[-width / 2 + _padding.x, 0, 0]}>
+            <group
               renderOrder={3}
-              onSync={handleSync}
-              anchorX="left"
-              anchorY="top-baseline"
-              depthOffset={0.5}
-              overflowWrap="break-word"
               position={[0, -renderInfo?.capHeight / 2, 0]}
-              {...restProps}
             >
-              {content}
-              <meshBasicMaterial
-                transparent
-                color={color}
-                toneMapped={false}
-                {...stencil}
-              />
-            </TextImpl>
+              {CustomText !== null ? (
+                CustomText
+              ) : (
+                <Text
+                  ref={textRef}
+                  onSync={handleSync}
+                  color={color}
+                  text={content}
+                  maxWidth={width - _padding.x * 2}
+                />
+              )}
+            </group>
 
             <group position-x={cursorWidth / 2}>
               <mesh
@@ -434,6 +505,6 @@ const Text = React.forwardRef(
   }
 );
 
-Text.displayName = "Text";
+Textarea.displayName = "Textarea";
 
-export default Text;
+export { Textarea };

@@ -3,34 +3,37 @@ import { storiesOf } from "@storybook/react";
 import "./index.css";
 import { Scene } from "./common";
 
-import { Textarea } from "../../src/components/Textarea";
+import { Textarea, Label } from "../../src/";
+import { Text } from "../../src/Textarea";
 
 const stories = storiesOf("Textarea", module);
 
 stories.add("Default Textarea", () => (
   <Scene>
-    <Textarea label="Default Textarea:" />
+    <Label text="Default Textarea:" />
+    <Textarea />
   </Scene>
 ));
 
 stories.add("Custom Fonts", () => (
   <Scene lightColor="blue">
-    <Textarea
-      label="Custom Fonts:"
-      textProps={{ font: "fonts/PlayfairDisplay-Regular.ttf" }}
-      labelProps={{ font: "fonts/MajorMonoDisplay.ttf" }}
-    />
+    <Label text="Custom Fonts" font="fonts/MajorMonoDisplay.ttf" />
+    <Textarea>
+      <Text font="fonts/PlayfairDisplay-Regular.ttf" />
+    </Textarea>
   </Scene>
 ));
 
 stories.add("Custom Cursor Width", () => (
   <Scene lightColor="blue">
-    <Textarea label="Cursor Width:" cursorWidth={0.025} />
+    <Label text="Cursor Width" />
+    <Textarea cursorWidth={0.025} />
   </Scene>
 ));
 
 stories.add("More rows", () => (
   <Scene lightColor="blue">
-    <Textarea label="Cursor Width:" rows={6} />
+    <Label text="More Rows" />
+    <Textarea rows={6} />
   </Scene>
 ));
