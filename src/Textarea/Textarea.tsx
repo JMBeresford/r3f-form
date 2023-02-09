@@ -94,7 +94,9 @@ const Textarea = React.forwardRef(
       gl.domElement.parentNode) as HTMLElement;
 
     // STATE
-    const [content, setContent] = React.useState<string>("");
+    const [content, setContent] = React.useState<string>(
+      (props.defaultValue as string) ?? ""
+    );
     const [active, setActive] = React.useState<boolean>(false);
     const [renderInfo, setRenderInfo] = React.useState(null);
     const [caret, setCaret] = React.useState<number>(0);
