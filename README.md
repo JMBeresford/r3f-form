@@ -79,7 +79,7 @@ const handleSubmit = (e: FormEvent) => {
 
   const data = new FormData(e.target);
 
-  for (let [name, value] of data.values()) {
+  for (let [name, value] of data.entries()) {
     console.log(`${name}: ${value}`);
   }
 };
