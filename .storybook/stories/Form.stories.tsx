@@ -20,6 +20,7 @@ const handleSubmit = (e: FormEvent, ref) => {
     let res = "";
 
     for (let [k, v] of data.entries()) {
+      if (!v) return;
       res += `${k}: ${v}\n`;
     }
 
@@ -81,17 +82,18 @@ const Btn = () => {
         setHovered(false);
         setSubmitting(false);
       }}
-      onClick={() => setSubmitting(true)}
+      onPointerDown={() => setSubmitting(true)}
+      onPointerUp={() => setSubmitting(false)}
     >
       <Text
         color="#aa5566"
         renderOrder={5}
         fontSize={0.185}
-        font="fonts/Montserrat-Bold.ttf"
+        font="fonts/Poppins-Bold.ttf"
         rotation-x={-Math.PI / 2}
         position-y={0.105}
       >
-        Submit
+        Login
       </Text>
       <mesh position={[0, 0.05, 0]} renderOrder={4}>
         <boxGeometry args={[1, 0.1, 0.5]} />
