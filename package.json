@@ -74,13 +74,12 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "three": "^0.148.0",
-    "troika-three-text": "^0.47.1",
-    "@react-three/drei": "^9.48.6",
+    "@react-three/drei": "^9.78.2",
+    "three": ">=0.146.0",
+    "troika-three-text": ">=0.47.0",
     "tslib": "^2.4.1"
   },
   "peerDependencies": {
-    "@react-three/drei": ">=9.0",
     "@react-three/fiber": ">=8.0",
     "react": ">=18.0",
     "react-dom": ">=18.0",
