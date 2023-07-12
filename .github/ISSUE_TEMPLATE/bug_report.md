@@ -23,7 +23,7 @@ A clear and concise description of what you expected to happen.
 **Code Sandbox**
 Sometimes it is easier to show rather than tell. Try to reproduce the bug in a codesandbox and give us the link. You can use this template to start:
 
-https://codesandbox.io/s/r3f-input-bug-report-t493wt
+https://codesandbox.io/p/sandbox/r3f-form-bug-report-5lwyrr
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
