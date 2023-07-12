@@ -1,7 +1,7 @@
 {
   "name": "r3f-form",
   "version": "0.0.0-development",
-  "description": "An accessible webGL form component library for use with React Three Fiber",
+  "description": "An *accessible* webGL form component library for use with React Three Fiber",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
