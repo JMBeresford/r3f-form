@@ -2,9 +2,23 @@
   "name": "r3f-form",
   "version": "0.0.0-development",
   "description": "A webGL input field component for use with React Three Fiber",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs.js"
+    },
+    "./Input": {
+      "types": "./dist/Input/index.d.ts",
+      "import": "./dist/Input/index.js",
+      "require": "./dist/Input/index.cjs.js"
+    },
+    "./Textarea": {
+      "types": "./dist/Textarea/index.d.ts",
+      "import": "./dist/Textarea/index.js",
+      "require": "./dist/Textarea/index.cjs.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
