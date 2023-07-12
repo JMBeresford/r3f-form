@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Color } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
-import { Input } from "../Input";
 
 type Props = {
   characters?: string;

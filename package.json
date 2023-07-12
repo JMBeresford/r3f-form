@@ -1,7 +1,7 @@
 {
   "name": "r3f-form",
   "version": "0.0.0-development",
-  "description": "A webGL input field component for use with React Three Fiber",
+  "description": "An accessible webGL form component library for use with React Three Fiber",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -54,7 +54,7 @@
     "@storybook/testing-library": "^0.0.13",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
-    "@types/three": "^0.146.0",
+    "@types/three": "^0.154.0",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "babel-loader": "^8.3.0",
