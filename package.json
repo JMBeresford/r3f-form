@@ -26,6 +26,8 @@
     "build": "rollup -c --bundleConfigAsCjs",
     "typegen": "tsc --emitDeclarationOnly",
     "lint": "eslint .",
+    "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"./src/**/*.{ts,tsx}\"",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "semantic-release": "semantic-release --branches main",

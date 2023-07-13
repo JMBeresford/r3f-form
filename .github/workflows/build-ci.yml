@@ -1,0 +1,23 @@
+name: Build CI
+
+on:
+  pull_request:
+    types: ["opened", "reopened"]
+    branches: ["main"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - name: Setup
+        run: npm ci
+      - name: Format
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
