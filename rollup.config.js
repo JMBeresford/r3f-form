@@ -10,7 +10,7 @@ const external = (id) => !id.startsWith(".") && !id.startsWith(root);
 
 export default [
   {
-    input: ["src/**/*.ts", "src/**/*.tsx", "!src/index.ts"],
+    input: ["src/**/*.ts", "src/**/*.tsx", "!src/index.ts", "!src/types.ts"],
     output: { dir: `dist`, format: "esm" },
     external,
     plugins: [
@@ -59,7 +59,7 @@ export default [
     ],
   },
   {
-    input: ["src/**/*.ts", "src/**/*.tsx", "!src/index.ts"],
+    input: ["src/**/*.ts", "src/**/*.tsx", "!src/index.ts", "!src/types.ts"],
     output: { dir: `dist`, format: "cjs" },
     external,
     plugins: [

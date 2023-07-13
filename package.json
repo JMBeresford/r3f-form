@@ -25,7 +25,7 @@
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "typegen": "tsc --emitDeclarationOnly",
-    "lint": "eslint .",
+    "lint": "eslint ./src/**/*.{ts,tsx} --max-warnings 0",
     "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"./src/**/*.{ts,tsx}\"",
     "storybook": "start-storybook -p 6006",
