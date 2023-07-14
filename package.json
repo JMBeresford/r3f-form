@@ -1,6 +1,6 @@
 {
-  "name": "r3f-form",
   "version": "0.0.0-development",
+  "name": "r3f-form",
   "description": "An *accessible* webGL form component library for use with React Three Fiber",
   "exports": {
     ".": {
@@ -25,13 +25,13 @@
   "scripts": {
     "build": "rollup -c --bundleConfigAsCjs",
     "typegen": "tsc --emitDeclarationOnly",
-    "lint": "eslint ./src/**/*.{ts,tsx} --max-warnings 0",
-    "format": "prettier --write \"./src/**/*.{ts,tsx}\"",
-    "format:check": "prettier --check \"./src/**/*.{ts,tsx}\"",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write \"./**/*.{ts,tsx,json}\"",
+    "format:check": "prettier --check \"./**/*.{ts,tsx,json}\"",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "semantic-release": "semantic-release --branches main",
-    "commit": "cz"
+    "commit": "cz",
+    "semantic-release": "semantic-release --branches main"
   },
   "author": "John Beresford",
   "license": "MIT",
@@ -65,9 +65,10 @@
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup": "^3.9.0",
