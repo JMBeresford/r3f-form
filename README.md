@@ -33,8 +33,10 @@ for text-rendering and selection/caret logic.
 
 ```sh
 npm install r3f-form
-# or, if using yarn
-yarn install r3f-form
+# or
+yarn add r3f-form
+# or
+pnpm install r3f-form
 ```
 
 # How to use
