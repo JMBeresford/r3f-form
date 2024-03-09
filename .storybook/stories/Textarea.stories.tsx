@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Textarea, Label } from "../../src";
-import { Text as TextareaText } from "../../src/Textarea";
+import { Textarea, Label, TextareaText } from "../../src";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Textarea> = {

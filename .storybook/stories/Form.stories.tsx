@@ -1,7 +1,5 @@
 import * as React from "react";
-import { Form, Input, Textarea, Label, Submit } from "../../src";
-import { Text as InputText } from "../../src/Input";
-import { Text as TextAreaText } from "../../src/Textarea";
+import { Form, Input, Textarea, Label, Submit, InputText } from "../../src";
 import type { Meta, StoryObj } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { Group } from "three";

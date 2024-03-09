@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Input, Label } from "../../src";
-import { Text as InputText } from "../../src/Input";
+import { Input, Label, InputText } from "../../src";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Input> = {
