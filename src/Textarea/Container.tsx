@@ -10,8 +10,7 @@ type Props = {
 } & JSX.IntrinsicElements["mesh"];
 
 const Container = (props: Props) => {
-  const { width, height, backgroundColor, backgroundOpacity, ...restProps } =
-    props;
+  const { width, height, backgroundColor, backgroundOpacity, ...restProps } = props;
 
   const [hovered, setHovered] = React.useState(false);
   useCursor(hovered, "text");

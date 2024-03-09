@@ -1,24 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": ["dom", "es2019"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": false,
-    "jsx": "react",
-    "pretty": true,
-    "strict": false,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "skipLibCheck": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "baseUrl": "./src"
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true
   },
-  "include": ["./src", "./typings.d.ts"],
-  "exclude": ["./node_modules/**/*"]
+  "include": ["src", ".storybook"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

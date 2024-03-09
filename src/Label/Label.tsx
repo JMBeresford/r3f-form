@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Color } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 
@@ -12,13 +11,7 @@ type Props = {
   textAlign?: "left" | "right" | "center" | "justify";
   font?: string;
   anchorX?: number | "left" | "center" | "right";
-  anchorY?:
-    | number
-    | "top"
-    | "top-baseline"
-    | "middle"
-    | "bottom-baseline"
-    | "bottom";
+  anchorY?: number | "top" | "top-baseline" | "middle" | "bottom-baseline" | "bottom";
   depthOffset?: number;
   overflowWrap?: "normal" | "break-word";
   whiteSpace?: "normal" | "overflowWrap" | "nowrap";
@@ -39,27 +32,15 @@ const Label = (props: Props) => {
     color = "black",
     text,
     anchorX = "center",
-    anchorY = "bottom-baseline",
+    anchorY = "bottom",
     fontSize = 0.07,
     ...restProps
   } = props;
 
-  const [offsetY, setOffsetY] = React.useState<number>(0);
-
   return (
     <>
-      <group position-y={offsetY}>
-        <Text
-          anchorX={anchorX}
-          anchorY={anchorY}
-          fontSize={fontSize}
-          {...restProps}
-          onSync={({ textRenderInfo }) => {
-            if (textRenderInfo) {
-              setOffsetY(textRenderInfo.lineHeight * 1.2);
-            }
-          }}
-        >
+      <group>
+        <Text anchorX={anchorX} anchorY={anchorY} fontSize={fontSize} {...restProps}>
           {text}
           <meshBasicMaterial color={color} />
         </Text>

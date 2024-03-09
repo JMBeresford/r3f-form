@@ -1,66 +1,68 @@
-import React, { FormEvent } from "react";
-import { storiesOf } from "@storybook/react";
-import "./index.css";
-import { Scene } from "./common";
-
-import { Form, Input, Textarea, Label, Submit } from "../../src/";
-
+import * as React from "react";
+import { Form, Input, Textarea, Label, Submit } from "../../src";
+import { Text as InputText } from "../../src/Input";
+import { Text as TextAreaText } from "../../src/Textarea";
+import type { Meta, StoryObj } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
+import { Group } from "three";
+import { damp } from "../../src/utils";
 import { Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { damp } from "three/src/math/MathUtils";
-import { Group } from "three";
 
-const stories = storiesOf("Form", module);
-
-const handleSubmit = (e: FormEvent, ref) => {
-  e.preventDefault();
-  if (ref.current) {
-    const data = new FormData(ref.current);
-
-    let res = "";
-
-    for (let [k, v] of data.entries()) {
-      if (!v) return;
-      res += `${k}: ${v}\n`;
-    }
-
-    window.alert(res);
-  }
+const meta: Meta<typeof Form> = {
+  component: Default,
+  title: "Form",
 };
 
-stories.add("Default Submit Button", () => {
+export default meta;
+type Story = StoryObj<typeof Form>;
+
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  const data = new FormData(e.target as HTMLFormElement);
+
+  let res = "";
+
+  for (let [k, v] of data.entries()) {
+    if (!v) return;
+    res += `${k}: ${v}\n`;
+  }
+
+  window.alert(res);
+  return res;
+};
+
+const submitAction = (event) => {
+  action("form submitted")(handleSubmit(event));
+};
+
+function Default() {
   const ref = React.useRef<HTMLFormElement>(null);
 
   return (
-    <Scene lightColor="blue">
-      <group position-y={0.2}>
-        <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-          <Label text="username" />
-          <Input name="username" />
+    <group position-y={0.2}>
+      <Form ref={ref} onSubmit={(e) => submitAction(e)}>
+        <Label position-y={0.1} text="Username" />
+        <Input name="username" />
 
-          <group position-y={-0.325}>
-            <Label text="password" />
-            <Input type="password" name="password" />
-          </group>
+        <group position-y={-0.325}>
+          <Label position-y={0.1} text="Password" />
+          <Input type="password" name="password" />
+        </group>
 
-          <Submit
-            position={[0, -0.55, 0]}
-            value="Login"
-            backgroundColor="#AA99FF"
-          />
-        </Form>
-      </group>
-    </Scene>
+        <Submit position={[0, -0.55, 0]} value="Login" backgroundColor="#AA99FF" />
+      </Form>
+    </group>
   );
-});
+}
 
-const Btn = () => {
+function Button() {
   const btnRef = React.useRef<Group>(null);
 
   const [hovered, setHovered] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  useFrame((s, delta) => {
+  useFrame((_, delta) => {
     if (btnRef.current) {
       let low = submitting ? 0.2 : 0.8;
 
@@ -101,59 +103,71 @@ const Btn = () => {
       </mesh>
     </group>
   );
+}
+
+function WithCustomButton() {
+  const ref = React.useRef<HTMLFormElement>(null);
+
+  return (
+    <group position-z={-0.5}>
+      <Form ref={ref} onSubmit={(e) => submitAction(e)}>
+        <Label position-y={0.1} text="Username" />
+        <Input name="username" defaultValue={"jim"}>
+          <InputText color="red" />
+        </Input>
+
+        <group position-y={-0.325}>
+          <Label position-y={0.1} text="Password" />
+          <Input type="password" name="password" />
+        </group>
+
+        <Submit value="submit" position={[0, 0, -0.5]}>
+          <Button />
+        </Submit>
+      </Form>
+    </group>
+  );
+}
+
+function WithTextArea() {
+  const ref = React.useRef<HTMLFormElement>(null);
+
+  return (
+    <group position-z={-0.5}>
+      <Form ref={ref} onSubmit={(e) => submitAction(e)}>
+        <group position-y={0.35}>
+          <Label position-y={0.1} text="Username" />
+          <Input name="username" />
+        </group>
+
+        <group position-y={0.05}>
+          <Label position-y={0.1} text="Password" />
+          <Input type="password" name="password" />
+        </group>
+
+        <group position-y={-0.25}>
+          <Label position-y={0.1} text="Message" />
+          <Textarea name="message" rows={2} />
+        </group>
+        <Submit value="submit" position={[0, 0, -0.5]}>
+          <Button />
+        </Submit>
+      </Form>
+    </group>
+  );
+}
+
+export const DefaultStory: Story = {
+  name: "Default",
+  render: () => <Default />,
 };
 
-stories.add("Custom Submit Button", () => {
-  const ref = React.useRef<HTMLFormElement>(null);
+export const CustomButtonStory: Story = {
+  name: "With Custom Button",
+  render: () => <WithCustomButton />,
+};
 
-  return (
-    <Scene lightColor="blue">
-      <group position-z={-0.5}>
-        <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-          <Label text="Username" />
-          <Input name="username" />
-
-          <group position-y={-0.325}>
-            <Label text="Password" />
-            <Input type="password" name="password" />
-          </group>
-
-          <Submit value="submit" position={[0, 0, -0.5]}>
-            <Btn />
-          </Submit>
-        </Form>
-      </group>
-    </Scene>
-  );
-});
-
-stories.add("With Textarea", () => {
-  const ref = React.useRef<HTMLFormElement>(null);
-
-  return (
-    <Scene lightColor="yellow">
-      <group position={[0, 0.45, -0.2]}>
-        <Form ref={ref} onSubmit={(e) => handleSubmit(e, ref)}>
-          <Label text="First Name" />
-          <Input name="fname" />
-
-          <group position-y={-0.3}>
-            <Label text="Last Name" />
-            <Input name="lname" />
-          </group>
-
-          <group position-y={-0.6}>
-            <Label text="Feedback" />
-            <Textarea name="feedback" />
-          </group>
-
-          <Submit
-            position={[0, -1.1, 0]}
-            value="submit"
-            backgroundColor="#DDFFAA"
-          />
-        </Form>
-      </group>
-    </Scene>
-  );
-});
+export const WithTextAreaStory: Story = {
+  name: "With TextArea",
+  render: () => <WithTextArea />,
+};

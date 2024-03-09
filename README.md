@@ -259,7 +259,7 @@ In order to configure the underlying `troika-three-text` instance
 that is responsible for rendering the actual text, you can use the
 `<Text />` component.
 
-There is a respective `<Text />` component for both `<Input />`s and
+There is a respective `<InputText />` or `<TextareaText />` component for both `<Input />`s and
 `<Textarea />`s.
 
 For all configuration options, check out the [troika docs](https://github.com/protectwise/troika/tree/main/packages/troika-three-text).
@@ -270,15 +270,14 @@ For all configuration options, check out the [troika docs](https://github.com/pr
 Change color and background opacity:
 
 ```tsx
-import { Input, Label } from "r3f-form";
-import { Text } from "r3f-form/Input";
+import { Input, Label, InputText } from "r3f-form";
 
 export function App() {
   return (
     <>
       <Label text="Test Color/Opacity" />
       <Input backgroundOpacity={0.6} backgroundColor="black">
-        <Text color="red" />
+        <InputText color="red" />
       </Input>
     </>
   );
@@ -287,14 +286,8 @@ export function App() {
 
 ![image](https://user-images.githubusercontent.com/1373954/217718611-c2e4848e-8267-4926-9243-7bb61bced61d.png)
 
-If you wanted to alter both an `<Input />` and a
-`<Textarea />` via their respective `<Text />` components
-you could do the following:
-
 ```tsx
-import { Input, Textarea, Label } from "r3f-form";
-import { Text as InputText } from "r3f-form/Input";
-import { Text as TextareaText } from "r3f-form/Textarea";
+import { Input, Textarea, Label, InputText, TextareaText } from "r3f-form";
 
 export function App() {
   return (

@@ -1,17 +1,7 @@
 import * as React from "react";
 import { Canvas, Color, useFrame, useThree } from "@react-three/fiber";
-import {
-  ContactShadows,
-  Environment,
-  Float,
-  OrbitControls,
-} from "@react-three/drei";
-import {
-  damp,
-  randFloat,
-  randInt,
-  seededRandom,
-} from "three/src/math/MathUtils";
+import { Environment, Float } from "@react-three/drei";
+import { damp, randFloat, randInt, seededRandom } from "three/src/math/MathUtils";
 import { Group } from "three";
 
 const Shapes = () => {
