@@ -1,4 +1,5 @@
 import { Color } from "@react-three/fiber";
+import { TextRenderInfo } from "troika-three-text";
 
 export type TroikaTextProps = {
   color?: Color;
@@ -17,5 +18,5 @@ export type TroikaTextProps = {
   strokeOpacity?: number;
   fillOpacity?: number;
   fillColor?: Color;
-  onSync?: (troika: any) => void;
+  onSync?: (troika: { textRenderInfo: TextRenderInfo }) => void;
 } & Omit<JSX.IntrinsicElements["mesh"], "ref" | "type">;

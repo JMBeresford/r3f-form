@@ -12,13 +12,7 @@ type Props = {
   textAlign?: "left" | "right" | "center" | "justify";
   font?: string;
   anchorX?: number | "left" | "center" | "right";
-  anchorY?:
-    | number
-    | "top"
-    | "top-baseline"
-    | "middle"
-    | "bottom-baseline"
-    | "bottom";
+  anchorY?: number | "top" | "top-baseline" | "middle" | "bottom-baseline" | "bottom";
   depthOffset?: number;
   outlineWidth?: number | string;
   outlineOffsetX?: number | string;
@@ -29,15 +23,15 @@ type Props = {
   strokeOpacity?: number;
   fillOpacity?: number;
   debugSDF?: boolean;
-  onSync?: (troika: any) => void;
+  onSync?: (troika: unknown) => void;
   text?: string;
 } & JSX.IntrinsicElements["mesh"];
 
-const Text = React.forwardRef((props: Props, ref) => {
+const TextareaText = React.forwardRef((props: Props, ref) => {
   const {
-    fontSize = 0.0825,
+    fontSize = 0.07,
     anchorX = "left",
-    anchorY = "top-baseline",
+    anchorY = "middle",
     depthOffset = 0.5,
     color = "black",
     text,
@@ -50,18 +44,17 @@ const Text = React.forwardRef((props: Props, ref) => {
     <TextImpl
       ref={ref}
       {...restProps}
-      // @ts-ignore
-      text={text}
       fontSize={fontSize}
       anchorX={anchorX}
       anchorY={anchorY}
       depthOffset={depthOffset}
     >
+      {text}
       <meshBasicMaterial color={color} toneMapped={false} {...stencil} />
     </TextImpl>
   );
 });
 
-Text.displayName = "Text";
+TextareaText.displayName = "TextareaText";
 
-export { Text };
+export { TextareaText };
