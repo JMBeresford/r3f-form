@@ -2,7 +2,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { BufferGeometry, Group, Material, Mesh, Vector2 as Vector2Impl } from "three";
 import { Color, ThreeEvent, Vector2, useFrame, useThree } from "@react-three/fiber";
-import { TextRenderInfo, getCaretAtPoint as getCaretAtPointBuiltIn, getSelectionRects } from "troika-three-text";
+import {
+  TextRenderInfo,
+  getCaretAtPoint as getCaretAtPointBuiltIn,
+  getSelectionRects,
+} from "troika-three-text";
 import { TextareaText } from "./Text";
 import { useFormContext } from "../Form";
 import { Mask, useMask } from "@react-three/drei";

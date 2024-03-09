@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: 'bug: <bug title>'
+title: "bug: <bug title>"
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -29,18 +29,21 @@ https://codesandbox.io/p/sandbox/r3f-form-bug-report-5lwyrr
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. macOS, windows]
- - OS Version [e.g. 13.3]
- - Browser [e.g. chrome, safari]
- - Browser Version [e.g. 22.5]
+
+- OS: [e.g. macOS, windows]
+- OS Version [e.g. 13.3]
+- Browser [e.g. chrome, safari]
+- Browser Version [e.g. 22.5]
 
 **Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS and version: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Browser Version [e.g. 22]
+
+- Device: [e.g. iPhone6]
+- OS and version: [e.g. iOS8.1]
+- Browser [e.g. stock browser, safari]
+- Browser Version [e.g. 22]
 
 **Package Versions**
+
 - Node.js version [e.g. 16.x]
 - NPM version [e.g. 8.9.x]
 - React Three Fiber version [e.g. 9.x]

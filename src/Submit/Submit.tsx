@@ -18,7 +18,14 @@ export type Props = ButtonProps &
   Omit<JSX.IntrinsicElements["input"], "ref">;
 
 const Button = (props: ButtonProps) => {
-  const { backgroundColor, width = 1.5, height = 0.1325, fontSize = 0.0825, color = "black", value } = props;
+  const {
+    backgroundColor,
+    width = 1.5,
+    height = 0.1325,
+    fontSize = 0.0825,
+    color = "black",
+    value,
+  } = props;
 
   return (
     <group>

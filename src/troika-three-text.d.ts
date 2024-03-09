@@ -110,6 +110,14 @@ declare module "troika-three-text" {
     // generation, typesetting, etc.
     timings?: object;
   };
-  declare function getCaretAtPoint(troikaText: TextRenderInfo, x: number, y: number): { charIndex: number };
-  declare function getSelectionRects(troikaText: TextRenderInfo, start: number, end: number): SelectionRect[];
+  declare function getCaretAtPoint(
+    troikaText: TextRenderInfo,
+    x: number,
+    y: number
+  ): { charIndex: number };
+  declare function getSelectionRects(
+    troikaText: TextRenderInfo,
+    start: number,
+    end: number
+  ): SelectionRect[];
 }

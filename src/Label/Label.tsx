@@ -28,7 +28,14 @@ type Props = {
 } & JSX.IntrinsicElements["mesh"];
 
 const Label = (props: Props) => {
-  const { color = "black", text, anchorX = "center", anchorY = "bottom", fontSize = 0.07, ...restProps } = props;
+  const {
+    color = "black",
+    text,
+    anchorX = "center",
+    anchorY = "bottom",
+    fontSize = 0.07,
+    ...restProps
+  } = props;
 
   return (
     <>

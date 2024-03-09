@@ -240,7 +240,14 @@ const Input = React.forwardRef((props: Props, ref?: React.ForwardedRef<HTMLInput
 
       // left click not held (i.e. not dragging)
       const dragging = buttons === 1 || buttons === 3;
-      if (!dragging || !renderInfo || !content || !textRef.current || !domRef.current || caret === null) {
+      if (
+        !dragging ||
+        !renderInfo ||
+        !content ||
+        !textRef.current ||
+        !domRef.current ||
+        caret === null
+      ) {
         return;
       }
 
@@ -418,8 +425,13 @@ const Input = React.forwardRef((props: Props, ref?: React.ForwardedRef<HTMLInput
             </mesh>
           </group>
 
-          <group position={[(caretPositions[selection[0]] + caretPositions[selection[1]]) / 2, 0, 0]}>
-            <mesh scale-x={Math.abs(caretPositions[selection[0]] - caretPositions[selection[1]])} renderOrder={2}>
+          <group
+            position={[(caretPositions[selection[0]] + caretPositions[selection[1]]) / 2, 0, 0]}
+          >
+            <mesh
+              scale-x={Math.abs(caretPositions[selection[0]] - caretPositions[selection[1]])}
+              renderOrder={2}
+            >
               <planeGeometry args={[1, fontSize]} />
               <meshBasicMaterial
                 color={selectionColor}
@@ -434,9 +446,18 @@ const Input = React.forwardRef((props: Props, ref?: React.ForwardedRef<HTMLInput
         </group>
       </group>
 
-      <mesh onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)} renderOrder={1}>
+      <mesh
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+        renderOrder={1}
+      >
         <planeGeometry args={[width, height]} />
-        <meshBasicMaterial color={backgroundColor} transparent opacity={backgroundOpacity} depthWrite={false} />
+        <meshBasicMaterial
+          color={backgroundColor}
+          transparent
+          opacity={backgroundOpacity}
+          depthWrite={false}
+        />
       </mesh>
     </group>
   );
